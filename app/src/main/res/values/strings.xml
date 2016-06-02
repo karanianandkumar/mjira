@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">MJira</string>
+    <string name="title_activity_logged_in">LoggedInActivity</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="imei">IMEI Number</string>
+    <string name="device_name">Device Name</string>
+</resources>
