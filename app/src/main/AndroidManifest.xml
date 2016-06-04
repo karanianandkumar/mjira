@@ -26,7 +26,8 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".DeviceListActivity" />
         <activity android:name=".AddDeviceActivity" />
-        <activity android:name=".SearchDeviceActivity"></activity>
+        <activity android:name=".SearchDeviceActivity" />
+        <activity android:name=".DeviceDetails"></activity>
     </application>
 
 </manifest>
