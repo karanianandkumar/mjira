@@ -17,6 +17,10 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    packagingOptions  {
+
+        exclude 'META-INF/XXX'
+    }
 }
 
 dependencies {
@@ -27,3 +31,4 @@ dependencies {
     compile 'com.android.support:design:23.4.0'
     compile 'com.android.support:support-v4:23.4.0'
 }
+apply plugin: 'com.google.gms.google-services'

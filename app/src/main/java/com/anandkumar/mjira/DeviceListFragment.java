@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 
 import com.backendless.Backendless;
@@ -29,7 +30,10 @@ public class DeviceListFragment extends Fragment {
     private ArrayList<String> deviceList;
     private ListView deviceListView;
 
+
     private ArrayAdapter<String> deviceListAdapter;
+
+    private LinearLayout linlaHeaderProgress;
 
     public DeviceListFragment() {
         // Required empty public constructor
@@ -41,6 +45,12 @@ public class DeviceListFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view= inflater.inflate(R.layout.fragment_device_list, container, false);
+
+
+        linlaHeaderProgress = (LinearLayout)view.findViewById(R.id.linlaHeaderProgress);
+        linlaHeaderProgress.setVisibility(View.VISIBLE);
+
+
         deviceListView=(ListView)view.findViewById(R.id.deviceList);
 
         deviceList=new ArrayList<String>();
@@ -54,8 +64,12 @@ public class DeviceListFragment extends Fragment {
         Backendless.UserService.findById(currentUser, new AsyncCallback<BackendlessUser>() {
             @Override
             public void handleResponse(BackendlessUser user) {
+
+
+
                 String userName=user.getProperty("name").toString();
                 getDeviceList(userName);
+                linlaHeaderProgress.setVisibility(View.GONE);
             }
 
             @Override
