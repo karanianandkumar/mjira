@@ -12,7 +12,6 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.backendless.Backendless;
-import com.backendless.BackendlessUser;
 import com.backendless.async.callback.AsyncCallback;
 import com.backendless.exceptions.BackendlessFault;
 
@@ -39,36 +38,24 @@ public class AddDeviceFragment extends Fragment {
         dName=(EditText)view.findViewById(R.id.deviceName);
         dIMEI=(EditText)view.findViewById(R.id.deviceIMEI);
         addButton=(Button)view.findViewById(R.id.addDevice);
+        final SaveData saveData=new SaveData(getActivity());
 
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                addToDeviceListTable();
+                Device device=new Device();
+                device.setOwner(saveData.getCurrentUser());
+                device.setName(dName.getText().toString());
+                device.setImei(dIMEI.getText().toString());
+                addNewDetails(device);
+
             }
         });
 
         return view;
     }
 
-    private void addToDeviceListTable() {
-        String currentUser=Backendless.UserService.loggedInUser();
-        Backendless.UserService.findById(currentUser, new AsyncCallback<BackendlessUser>() {
-            @Override
-            public void handleResponse(BackendlessUser response) {
 
-                Device device=new Device();
-                device.setOwner(response.getProperty("name").toString());
-                device.setName(dName.getText().toString());
-                device.setImei(dIMEI.getText().toString());
-                addNewDetails(device);
-            }
-
-            @Override
-            public void handleFault(BackendlessFault fault) {
-
-            }
-        });
-    }
 
     private void addNewDetails(Device device) {
         Backendless.Persistence.save(device, new AsyncCallback<Device>() {

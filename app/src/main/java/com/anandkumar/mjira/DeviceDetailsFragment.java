@@ -56,29 +56,22 @@ public class DeviceDetailsFragment extends Fragment {
 
                 deviceRequest.setImei(deviceImeiString);
                 deviceRequest.setToUser(deviceOwnerString);
-                final String fromUser=Backendless.UserService.loggedInUser();
-                Backendless.UserService.findById(fromUser, new AsyncCallback<BackendlessUser>() {
+                deviceRequest.setAccepted(false);
+                SaveData saveData=new SaveData(getActivity());
+                deviceRequest.setFromUser(saveData.getCurrentUser());
+
+
+
+                BackendlessDataQuery query=new BackendlessDataQuery();
+                Backendless.Persistence.save(deviceRequest, new AsyncCallback<DeviceRequest>() {
                     @Override
-                    public void handleResponse(BackendlessUser response) {
-                        deviceRequest.setFromUser(response.getProperty("name").toString());
-
-                        BackendlessDataQuery query=new BackendlessDataQuery();
-                        Backendless.Persistence.save(deviceRequest, new AsyncCallback<DeviceRequest>() {
-                            @Override
-                            public void handleResponse(DeviceRequest response) {
-                                Toast.makeText(getActivity(),"Device Request Succesfully Sent",Toast.LENGTH_SHORT).show();
-                            }
-
-                            @Override
-                            public void handleFault(BackendlessFault fault) {
-                                Toast.makeText(getActivity(),"Device Request failed",Toast.LENGTH_SHORT).show();
-                            }
-                        });
+                    public void handleResponse(DeviceRequest response) {
+                        Toast.makeText(getActivity(),"Device Request Succesfully Sent",Toast.LENGTH_SHORT).show();
                     }
 
                     @Override
                     public void handleFault(BackendlessFault fault) {
-
+                        Toast.makeText(getActivity(),"Device Request failed",Toast.LENGTH_SHORT).show();
                     }
                 });
 

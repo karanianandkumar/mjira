@@ -13,7 +13,6 @@ import android.widget.ListView;
 
 import com.backendless.Backendless;
 import com.backendless.BackendlessCollection;
-import com.backendless.BackendlessUser;
 import com.backendless.async.callback.AsyncCallback;
 import com.backendless.exceptions.BackendlessFault;
 import com.backendless.persistence.BackendlessDataQuery;
@@ -60,23 +59,13 @@ public class DeviceListFragment extends Fragment {
                 deviceList);
         deviceListView.setAdapter(deviceListAdapter);
 
-         String currentUser= Backendless.UserService.loggedInUser();
-        Backendless.UserService.findById(currentUser, new AsyncCallback<BackendlessUser>() {
-            @Override
-            public void handleResponse(BackendlessUser user) {
+        SaveData saveData=new SaveData(getActivity());
+
+        String userName=saveData.getCurrentUser();
+        getDeviceList(userName);
 
 
 
-                String userName=user.getProperty("name").toString();
-                getDeviceList(userName);
-                linlaHeaderProgress.setVisibility(View.GONE);
-            }
-
-            @Override
-            public void handleFault(BackendlessFault fault) {
-
-            }
-        });
 
         return view;
     }
@@ -96,6 +85,7 @@ public class DeviceListFragment extends Fragment {
                     Log.d("IMEI","  is: "+devicelist.getImei());
                 }
                 deviceListAdapter.notifyDataSetChanged();
+                linlaHeaderProgress.setVisibility(View.GONE);
             }
 
             @Override

@@ -40,8 +40,7 @@ public class LoggedInFragment extends Fragment {
                 "Logout",
                 "Add Device",
                 "Search",
-                "Send Picture",
-                "Incoming Pictures"
+                "Device Requests"
         };
         loggedInLV=(ListView) view.findViewById(R.id.loggedInpage);
         loggedAdapter=new ArrayAdapter<String>(
@@ -79,8 +78,8 @@ public class LoggedInFragment extends Fragment {
                     Intent intent=new Intent(getActivity(),SearchDeviceActivity.class);
                     startActivity(intent);
                 }else if(position==4){
-//                    Intent intent=new Intent(getActivity(),MainMenuActivity.class);
-//                    startActivity(intent);
+                    Intent intent=new Intent(getActivity(),IncomingRequestActivity.class);
+                    startActivity(intent);
                 }else if(position==5){
 //                    Intent intent=new Intent(getActivity(),InboxActivity.class);
 //                    startActivity(intent);

@@ -60,6 +60,8 @@ public class RegisterFragment extends Fragment {
                 Backendless.UserService.register(backendlessUser, new AsyncCallback<BackendlessUser>() {
                     @Override
                     public void handleResponse(BackendlessUser response) {
+                        SaveData saveData=new SaveData(getActivity());
+                        saveData.setCurrentUser(response.getProperty("name").toString());
                         Toast.makeText(getActivity(),"Successfully Register",Toast.LENGTH_SHORT).show();
                     }
 

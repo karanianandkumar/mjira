@@ -13,7 +13,7 @@ public class DeviceRequest {
        this.fromUser="";
         this.toUser="";
         this.imei="";
-        isAccepted=false;
+        this.isAccepted=false;
     }
 
     public String getFromUser() {

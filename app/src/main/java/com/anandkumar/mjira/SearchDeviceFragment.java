@@ -92,38 +92,46 @@ public class SearchDeviceFragment extends Fragment {
         Backendless.UserService.findById(currentUser, new AsyncCallback<BackendlessUser>() {
             @Override
             public void handleResponse(BackendlessUser response) {
-                String user=response.getProperty("name").toString();
-
-                BackendlessDataQuery query=new BackendlessDataQuery();
-                query.setWhereClause(String.format("name LIKE '%s' and owner!= '%s' ",device+"%",user));
-
-                Backendless.Persistence.of(Device.class).find(query, new AsyncCallback<BackendlessCollection<Device>>() {
-                    @Override
-                    public void handleResponse(BackendlessCollection<Device> response) {
-                        List<Device> resultData=response.getData();
-                        Log.d("No.of Devices:\t",": "+resultData.size());
-                        if(resultData.size()!=0){
-                            for(Device resultDevice:resultData){
-                                queryResult.add(resultDevice.getOwner()+"::"+resultDevice.getImei() );
-                                queryDeviceList.add(resultDevice);
-                            }
-
-                            queryResultAdapter.notifyDataSetChanged();
 
 
-                        }
-                    }
 
-                    @Override
-                    public void handleFault(BackendlessFault fault) {
-                        Toast.makeText(getActivity(),"No Devices!!",Toast.LENGTH_SHORT).show();
-                    }
-                });
             }
 
             @Override
             public void handleFault(BackendlessFault fault) {
 
+            }
+        });
+
+
+        SaveData saveData=new SaveData(getActivity());
+
+
+
+        String user=saveData.getCurrentUser();
+        BackendlessDataQuery query=new BackendlessDataQuery();
+        query.setWhereClause(String.format("name LIKE '%s' and owner!= '%s' ",device+"%",user));
+
+        Backendless.Persistence.of(Device.class).find(query, new AsyncCallback<BackendlessCollection<Device>>() {
+            @Override
+            public void handleResponse(BackendlessCollection<Device> response) {
+                List<Device> resultData=response.getData();
+                Log.d("No.of Devices:\t",": "+resultData.size());
+                if(resultData.size()!=0){
+                    for(Device resultDevice:resultData){
+                        queryResult.add(resultDevice.getOwner()+"::"+resultDevice.getImei() );
+                        queryDeviceList.add(resultDevice);
+                    }
+
+                    queryResultAdapter.notifyDataSetChanged();
+
+
+                }
+            }
+
+            @Override
+            public void handleFault(BackendlessFault fault) {
+                Toast.makeText(getActivity(),"No Devices!!",Toast.LENGTH_SHORT).show();
             }
         });
 

@@ -57,6 +57,8 @@ public class LoginFragment extends Fragment {
                                 "Succefully Loged in",
                                 Toast.LENGTH_SHORT
                         ).show();
+                        SaveData saveData=new SaveData(getActivity());
+                        saveData.setCurrentUser(response.getProperty("name").toString());
                         Intent intent=new Intent(getActivity(),MainActivity.class);
                         startActivity(intent);
                     }

@@ -27,7 +27,8 @@
         <activity android:name=".DeviceListActivity" />
         <activity android:name=".AddDeviceActivity" />
         <activity android:name=".SearchDeviceActivity" />
-        <activity android:name=".DeviceDetails"></activity>
+        <activity android:name=".DeviceDetails" />
+        <activity android:name=".IncomingRequestActivity"></activity>
     </application>
 
 </manifest>
