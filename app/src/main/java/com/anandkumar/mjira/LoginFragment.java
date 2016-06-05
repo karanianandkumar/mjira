@@ -59,6 +59,9 @@ public class LoginFragment extends Fragment {
                         ).show();
                         SaveData saveData=new SaveData(getActivity());
                         saveData.setCurrentUser(response.getProperty("name").toString());
+                        //saveData.setDeviceId(response.getProperty("deviceID").toString());
+
+                        Toast.makeText(getActivity(),"Device ID is: \t "+saveData.getDeviceId(),Toast.LENGTH_SHORT).show();
                         Intent intent=new Intent(getActivity(),MainActivity.class);
                         startActivity(intent);
                     }

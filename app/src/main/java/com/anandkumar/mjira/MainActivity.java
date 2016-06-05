@@ -3,6 +3,7 @@ package com.anandkumar.mjira;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.widget.Toast;
 
 import com.backendless.Backendless;
 import com.backendless.DeviceRegistration;
@@ -15,7 +16,7 @@ public class MainActivity extends AppCompatActivity {
     public static final String SECRET_KEY="A704FC51-2383-ED58-FF2D-E09181A44D00";
     public static final String VERSION="v1";
     public static final String GCMSENDER_ID="1003552598634";
-    private String data=null;
+    private String data;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -25,36 +26,34 @@ public class MainActivity extends AppCompatActivity {
 
         Backendless.initApp(this,APP_ID,SECRET_KEY,VERSION);
 
-        final SaveData saveData=new SaveData(getApplicationContext());
+        final SaveData saveData=new SaveData(this);
 
         String deviceId=saveData.getDeviceId();
 
-        //Toast.makeText(MainActivity.this,"The register Id of Device is:\t"+deviceId,Toast.LENGTH_SHORT).show();
+
 
 
         if(deviceId==null) {
-        Backendless.Messaging.registerDevice(GCMSENDER_ID, new AsyncCallback<Void>() {
-            @Override
-            public void handleResponse(Void response) {
-                //Toast.makeText(MainActivity.this,"The register Id of Device is stored successfully",Toast.LENGTH_SHORT).show();
-            }
+            Backendless.Messaging.registerDevice(GCMSENDER_ID, new AsyncCallback<Void>() {
+                @Override
+                public void handleResponse(Void response) {
+                    //Toast.makeText(MainActivity.this,"The register Id of Device is stored successfully",Toast.LENGTH_SHORT).show();
+                }
 
-            @Override
-            public void handleFault(BackendlessFault fault) {
+                @Override
+                public void handleFault(BackendlessFault fault) {
 
-            }
-        });
-
-
-
+                }
+            });
 
             Backendless.Messaging.getDeviceRegistration(new AsyncCallback<DeviceRegistration>() {
                 @Override
                 public void handleResponse(DeviceRegistration response) {
-                    data = response.getDeviceId();
-                    saveData.setDeviceId(data);
-                    //Toast.makeText(MainActivity.this,"The register Id of Device is:\t"+saveData.getDeviceId(),Toast.LENGTH_SHORT).show();
-                    //Toast.makeText(MainActivity.this,"The register Id of Device is:\t"+data,Toast.LENGTH_SHORT).show();
+
+                    saveData.setDeviceId(response.getDeviceId());
+
+                    Toast.makeText(MainActivity.this,"The register Id  is(2):\t"+saveData.getDeviceId(), Toast.LENGTH_SHORT).show();
+
                 }
 
                 @Override
@@ -63,6 +62,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
         }
+
 
 
 //

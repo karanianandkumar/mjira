@@ -41,8 +41,8 @@ public class SaveData {
         return pref.getString(DEVICE_ID, null);
     }
 
-    public void setDeviceId(String deviceId){
-        editor.putString(DEVICE_ID, deviceId);
+    public void setDeviceId(String user){
+        editor.putString(DEVICE_ID, user);
         editor.commit();
     }
 
