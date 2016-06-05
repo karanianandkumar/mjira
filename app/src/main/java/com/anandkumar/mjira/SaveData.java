@@ -9,6 +9,9 @@ import android.content.SharedPreferences;
 public class SaveData {
 
     private static final String CURRENT_USER=null;
+    private static final String DEVICE_ID=null;
+
+
 
     SharedPreferences pref;
     SharedPreferences.Editor editor;
@@ -34,6 +37,13 @@ public class SaveData {
         editor.commit();
     }
 
+    public String getDeviceId() {
+        return pref.getString(DEVICE_ID, null);
+    }
 
+    public void setDeviceId(String deviceId){
+        editor.putString(DEVICE_ID, deviceId);
+        editor.commit();
+    }
 
 }

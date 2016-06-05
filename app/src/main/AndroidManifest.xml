@@ -2,8 +2,14 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.anandkumar.mjira">
 
-    <uses-permission android:name="android.permission.INTERNET" />
+
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.GET_ACCOUNTS"/>
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
+    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE"/>
+    <uses-permission android:name="com.anandkumar.mjira.permission.C2D_MESSAGE"/>
+    <permission android:name="com.anandkumar.mjira.permission.C2D_MESSAGE" android:protectionLevel="signature"/>
 
     <application
         android:allowBackup="true"
@@ -29,6 +35,14 @@
         <activity android:name=".SearchDeviceActivity" />
         <activity android:name=".DeviceDetails" />
         <activity android:name=".IncomingRequestActivity"></activity>
+
+        <receiver android:name="com.backendless.push.BackendlessBroadcastReceiver" android:permission="com.google.android.c2dm.permission.SEND">
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.RECEIVE"/>
+                <action android:name="com.google.android.c2dm.intent.REGISTRATION"/>
+                <category android:name="com.anandkumar.mjira"/>
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>
