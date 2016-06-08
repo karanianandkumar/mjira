@@ -1,6 +1,7 @@
 package com.anandkumar.mjira;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -49,6 +50,8 @@ public class DeviceListFragment extends Fragment {
         linlaHeaderProgress = (LinearLayout)view.findViewById(R.id.linlaHeaderProgress);
         linlaHeaderProgress.setVisibility(View.VISIBLE);
 
+        Intent intent=getActivity().getIntent();
+        String currentUser=intent.getStringExtra("currentUser");
 
         deviceListView=(ListView)view.findViewById(R.id.deviceList);
 
@@ -59,10 +62,10 @@ public class DeviceListFragment extends Fragment {
                 deviceList);
         deviceListView.setAdapter(deviceListAdapter);
 
-        SaveData saveData=new SaveData(getActivity());
+        SaveData saveData=new SaveData(getActivity().getApplicationContext());
 
-        String userName=saveData.getCurrentUser();
-        getDeviceList(userName);
+
+        getDeviceList(currentUser);
 
 
 

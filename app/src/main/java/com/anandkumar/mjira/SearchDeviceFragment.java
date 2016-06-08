@@ -17,7 +17,6 @@ import android.widget.Toast;
 
 import com.backendless.Backendless;
 import com.backendless.BackendlessCollection;
-import com.backendless.BackendlessUser;
 import com.backendless.async.callback.AsyncCallback;
 import com.backendless.exceptions.BackendlessFault;
 import com.backendless.persistence.BackendlessDataQuery;
@@ -58,6 +57,10 @@ public class SearchDeviceFragment extends Fragment {
                 queryResult
         );
 
+        Intent intent1=getActivity().getIntent();
+        final String currentUser=intent1.getStringExtra("currentUser");
+
+
         searchButton=(Button)view.findViewById(R.id.searchButton);
         searchET=(EditText)view.findViewById(R.id.searchET);
         searchResults=(ListView)view.findViewById(R.id.searchResults);
@@ -71,6 +74,7 @@ public class SearchDeviceFragment extends Fragment {
                 intent.putExtra("toUser",queryDeviceList.get(position).getOwner());
                 intent.putExtra("name",queryDeviceList.get(position).getName());
                 intent.putExtra("imei",queryDeviceList.get(position).getImei());
+                intent.putExtra("currentUser",currentUser);
 
                 startActivity(intent);
             }
@@ -80,35 +84,22 @@ public class SearchDeviceFragment extends Fragment {
             public void onClick(View v) {
                 queryResult.clear();
                 String device=searchET.getText().toString();
-                searchForDevice(device);
+                searchForDevice(device,currentUser);
             }
         });
         return view;
     }
 
-    private void searchForDevice(final String device) {
-
-        String currentUser=Backendless.UserService.loggedInUser();
-        Backendless.UserService.findById(currentUser, new AsyncCallback<BackendlessUser>() {
-            @Override
-            public void handleResponse(BackendlessUser response) {
+    private void searchForDevice(final String device,String user) {
 
 
 
-            }
-
-            @Override
-            public void handleFault(BackendlessFault fault) {
-
-            }
-        });
-
-
-        SaveData saveData=new SaveData(getActivity());
 
 
 
-        String user=saveData.getCurrentUser();
+
+
+
         BackendlessDataQuery query=new BackendlessDataQuery();
         query.setWhereClause(String.format("name LIKE '%s' and owner!= '%s' ",device+"%",user));
 

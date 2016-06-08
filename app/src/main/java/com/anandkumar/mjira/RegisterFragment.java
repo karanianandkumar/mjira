@@ -1,6 +1,7 @@
 package com.anandkumar.mjira;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -42,9 +43,11 @@ public class RegisterFragment extends Fragment {
         usernameField=(EditText)view.findViewById(R.id.userNameField);
         passwordField=(EditText)view.findViewById(R.id.passwordField);
         mailField=(EditText)view.findViewById(R.id.loginMailField);
-        final SaveData saveData=new SaveData(getActivity());
+        final SaveData saveData=new SaveData(getActivity().getApplicationContext());
 
 
+
+        Toast.makeText(getActivity(), "The register Id  is(4):\t" + saveData.getDeviceId(), Toast.LENGTH_SHORT).show();
 
         registerButton=(Button)view.findViewById(R.id.register);
         registerButton.setOnClickListener(new View.OnClickListener() {
@@ -59,18 +62,34 @@ public class RegisterFragment extends Fragment {
                 backendlessUser.setPassword(password);
                 backendlessUser.setProperty("name",username);
                 backendlessUser.setEmail(mail);
+
                 backendlessUser.setProperty("device",saveData.getDeviceId());
+
+                Toast.makeText(getActivity(), "The register Id  is(5):\t" + saveData.getDeviceId(), Toast.LENGTH_SHORT).show();
+
+
+
+
+
 
                 Backendless.UserService.register(backendlessUser, new AsyncCallback<BackendlessUser>() {
                     @Override
                     public void handleResponse(BackendlessUser response) {
 
-                        saveData.setCurrentUser(response.getProperty("name").toString());
+                        /*SaveData saveData1=new SaveData(getActivity().getApplicationContext());
+                        saveData1.setCurrentUser(response.getProperty("name").toString());
+                        saveData1.setDeviceId(response.getProperty("device").toString());
                         Toast.makeText(getActivity(),"Successfully Register",Toast.LENGTH_SHORT).show();
 
-                        String cUser=saveData.getCurrentUser();
-                        String dID=saveData.getDeviceId();
-                        Toast.makeText(getActivity(),"User Name is :\t "+cUser+" and device ID is: \t "+dID,Toast.LENGTH_SHORT).show();
+
+
+                        Toast.makeText(getActivity(),"User Name is :\t "+saveData.getCurrentUser()+" device ID is: \t "+saveData.getDeviceId(),Toast.LENGTH_SHORT).show();
+
+                        Toast.makeText(getActivity(),"User Name is :\t "+saveData1.getCurrentUser()+" device ID is: \t "+saveData1.getDeviceId(),Toast.LENGTH_SHORT).show();*/
+                        Toast.makeText(getActivity(),"Successfully Registered...",Toast.LENGTH_SHORT).show();
+
+                        Intent intent=new Intent(getActivity(),MainActivity.class);
+                        startActivity(intent);
                     }
 
                     @Override
@@ -80,6 +99,8 @@ public class RegisterFragment extends Fragment {
                 });
             }
         });
+
+
 
 
 

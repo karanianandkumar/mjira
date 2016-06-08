@@ -23,37 +23,22 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
 
+        Backendless.initApp(this, APP_ID, SECRET_KEY, VERSION);
 
-        Backendless.initApp(this,APP_ID,SECRET_KEY,VERSION);
+        final SaveData saveData = new SaveData(getApplicationContext());
 
-        final SaveData saveData=new SaveData(this);
+        final String deviceId = saveData.getDeviceId();
 
-        String deviceId=saveData.getDeviceId();
+        Toast.makeText(MainActivity.this,"Registed Device Id is 1:\t"+deviceId,Toast.LENGTH_SHORT).show();
 
-
-
+        Backendless.Messaging.registerDevice(GCMSENDER_ID);
 
         if(deviceId==null) {
-            Backendless.Messaging.registerDevice(GCMSENDER_ID, new AsyncCallback<Void>() {
-                @Override
-                public void handleResponse(Void response) {
-                    //Toast.makeText(MainActivity.this,"The register Id of Device is stored successfully",Toast.LENGTH_SHORT).show();
-                }
-
-                @Override
-                public void handleFault(BackendlessFault fault) {
-
-                }
-            });
-
             Backendless.Messaging.getDeviceRegistration(new AsyncCallback<DeviceRegistration>() {
                 @Override
                 public void handleResponse(DeviceRegistration response) {
-
+                    Toast.makeText(MainActivity.this, "Registed Device Id is 2:\t" + response.getDeviceId(), Toast.LENGTH_SHORT).show();
                     saveData.setDeviceId(response.getDeviceId());
-
-                    Toast.makeText(MainActivity.this,"The register Id  is(2):\t"+saveData.getDeviceId(), Toast.LENGTH_SHORT).show();
-
                 }
 
                 @Override
@@ -61,41 +46,18 @@ public class MainActivity extends AppCompatActivity {
 
                 }
             });
+
         }
+        Toast.makeText(MainActivity.this,"Registed Device Id is 3 : \t"+saveData.getDeviceId(),Toast.LENGTH_SHORT).show();
 
+            if (Backendless.UserService.loggedInUser() == "") {
+                MenuFragment menuFragment = new MenuFragment();
+                getSupportFragmentManager().beginTransaction().add(R.id.container, menuFragment).commit();
+            } else {
 
-
-//
-//        DeliveryOptions deliveryOptions = new DeliveryOptions();
-//        deliveryOptions.addPushSinglecast( data );
-//
-//        PublishOptions publishOptions = new PublishOptions();
-//        publishOptions.putHeader( "android-ticker-text", "You just got a private push notification!" );
-//        publishOptions.putHeader( "android-content-title", "This is a notification title" );
-//        publishOptions.putHeader( "android-content-text", "Push Notifications are cool" );
-//
-//         Backendless.Messaging.publish("this is a private message!", publishOptions, deliveryOptions, new AsyncCallback<MessageStatus>() {
-//            @Override
-//            public void handleResponse(MessageStatus response) {
-//                Toast.makeText(MainActivity.this,"Push message sent to "+data,Toast.LENGTH_SHORT).show();
-//            }
-//
-//            @Override
-//            public void handleFault(BackendlessFault fault) {
-//                Toast.makeText(MainActivity.this,"Push message sending failed",Toast.LENGTH_SHORT).show();
-//            }
-//        });
-
-
-
-       if(Backendless.UserService.loggedInUser()==""){
-           MenuFragment menuFragment=new MenuFragment();
-           getSupportFragmentManager().beginTransaction().add(R.id.container,menuFragment).commit();
-        }else{
-//           LoggedInFragment loggedInFragment=new LoggedInFragment();
-//           getSupportFragmentManager().beginTransaction().add(R.id.container,loggedInFragment).commit();
-           Intent intent=new Intent(MainActivity.this,LoggedInActivity.class);
-           startActivity(intent);
-       }
+                Intent intent = new Intent(MainActivity.this, LoggedInActivity.class);
+                startActivity(intent);
+            }
+        }
     }
-}
+

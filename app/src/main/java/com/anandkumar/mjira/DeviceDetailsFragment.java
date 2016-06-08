@@ -12,10 +12,16 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.backendless.Backendless;
+import com.backendless.BackendlessCollection;
 import com.backendless.BackendlessUser;
 import com.backendless.async.callback.AsyncCallback;
 import com.backendless.exceptions.BackendlessFault;
+import com.backendless.messaging.DeliveryOptions;
+import com.backendless.messaging.MessageStatus;
+import com.backendless.messaging.PublishOptions;
 import com.backendless.persistence.BackendlessDataQuery;
+
+import java.util.List;
 
 
 /**
@@ -43,8 +49,9 @@ public class DeviceDetailsFragment extends Fragment {
         deviceImei=(TextView)view.findViewById(R.id.dIMEI);
         requestButton=(Button) view.findViewById(R.id.requestButton);
 
-        Intent intent=getActivity().getIntent();
+        final Intent intent=getActivity().getIntent();
         String deviceNameString=intent.getStringExtra("name").toString();
+        final String currentUser=intent.getStringExtra("currentUser");
         final String deviceOwnerString=intent.getStringExtra("toUser").toString();
         final String deviceImeiString=intent.getStringExtra("imei").toString();
 
@@ -57,16 +64,21 @@ public class DeviceDetailsFragment extends Fragment {
                 deviceRequest.setImei(deviceImeiString);
                 deviceRequest.setToUser(deviceOwnerString);
                 deviceRequest.setAccepted(false);
-                SaveData saveData=new SaveData(getActivity());
-                deviceRequest.setFromUser(saveData.getCurrentUser());
+
+
+                deviceRequest.setFromUser(currentUser);
 
 
 
-                BackendlessDataQuery query=new BackendlessDataQuery();
+
+
                 Backendless.Persistence.save(deviceRequest, new AsyncCallback<DeviceRequest>() {
                     @Override
                     public void handleResponse(DeviceRequest response) {
                         Toast.makeText(getActivity(),"Device Request Succesfully Sent",Toast.LENGTH_SHORT).show();
+
+
+
                     }
 
                     @Override
@@ -76,6 +88,48 @@ public class DeviceDetailsFragment extends Fragment {
                 });
 
 
+                BackendlessDataQuery query=new BackendlessDataQuery();
+                query.setWhereClause(String.format("name= '%s'",deviceOwnerString));
+
+                Backendless.Persistence.of(BackendlessUser.class).find(query, new AsyncCallback<BackendlessCollection<BackendlessUser>>() {
+                    @Override
+                    public void handleResponse(BackendlessCollection<BackendlessUser> response) {
+                        List<BackendlessUser> users=response.getData();
+
+                        Toast.makeText(getActivity()," Query result length : \t"+users.size(),Toast.LENGTH_SHORT).show();
+                        for(BackendlessUser user:users){
+                            final String deviceId=user.getProperty("device").toString();
+
+
+                            Toast.makeText(getActivity(),"Push message sent to "+deviceId,Toast.LENGTH_SHORT).show();
+
+                            DeliveryOptions deliveryOptions = new DeliveryOptions();
+                            deliveryOptions.addPushSinglecast( deviceId );
+
+                            PublishOptions publishOptions = new PublishOptions();
+                            publishOptions.putHeader( "android-ticker-text", "You just got a Device Request!" );
+                            publishOptions.putHeader( "android-content-title", "From "+ currentUser );
+                            publishOptions.putHeader( "android-content-text", "Reg:" +deviceImeiString);
+
+                            Backendless.Messaging.publish("this is a private message!", publishOptions, deliveryOptions, new AsyncCallback<MessageStatus>() {
+                                @Override
+                                public void handleResponse(MessageStatus response) {
+                                    Toast.makeText(getActivity(),"Push message sent to "+deviceId,Toast.LENGTH_SHORT).show();
+                                }
+
+                                @Override
+                                public void handleFault(BackendlessFault fault) {
+                                    Toast.makeText(getActivity(),"Push message sending failed",Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                        }
+                    }
+
+                    @Override
+                    public void handleFault(BackendlessFault fault) {
+
+                    }
+                });
             }
         });
 

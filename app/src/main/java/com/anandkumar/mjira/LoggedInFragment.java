@@ -13,13 +13,9 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.backendless.Backendless;
-import com.backendless.BackendlessCollection;
 import com.backendless.BackendlessUser;
 import com.backendless.async.callback.AsyncCallback;
 import com.backendless.exceptions.BackendlessFault;
-import com.backendless.persistence.BackendlessDataQuery;
-
-import java.util.List;
 
 
 /**
@@ -30,6 +26,9 @@ public class LoggedInFragment extends Fragment {
 
     private ListView loggedInLV;
     private ArrayAdapter<String> loggedAdapter;
+
+    String Currentuser=null;
+
     public LoggedInFragment() {
         // Required empty public constructor
     }
@@ -47,6 +46,27 @@ public class LoggedInFragment extends Fragment {
                 "Search",
                 "Device Requests"
         };
+
+         String user= Backendless.UserService.loggedInUser();
+
+
+        Backendless.UserService.findById(user, new AsyncCallback<BackendlessUser>() {
+            @Override
+            public void handleResponse(BackendlessUser response) {
+
+               Currentuser =response.getProperty("name").toString();
+            }
+
+            @Override
+            public void handleFault(BackendlessFault fault) {
+
+            }
+        });
+
+        Toast.makeText(getActivity(),"Current User is :\t"+ Currentuser,Toast.LENGTH_SHORT).show();
+        Toast.makeText(getActivity(),"Device Id  is :\t"+ new SaveData(getActivity().getApplicationContext()).getDeviceId(),Toast.LENGTH_SHORT).show();
+
+
         loggedInLV=(ListView) view.findViewById(R.id.loggedInpage);
         loggedAdapter=new ArrayAdapter<String>(
                 getActivity(),
@@ -59,6 +79,7 @@ public class LoggedInFragment extends Fragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 if(position==0){
                      Intent intent=new Intent(getActivity(),DeviceListActivity.class);
+                    intent.putExtra("currentUser",Currentuser);
                     startActivity(intent);
                 }else if(position==1){
 
@@ -78,12 +99,15 @@ public class LoggedInFragment extends Fragment {
                     });
                 }else if(position==2){
                     Intent intent=new Intent(getActivity(),AddDeviceActivity.class);
+                    intent.putExtra("currentUser",Currentuser);
                     startActivity(intent);
                 }else if(position==3){
                     Intent intent=new Intent(getActivity(),SearchDeviceActivity.class);
+                    intent.putExtra("currentUser",Currentuser);
                     startActivity(intent);
                 }else if(position==4){
                     Intent intent=new Intent(getActivity(),IncomingRequestActivity.class);
+                    intent.putExtra("currentUser",Currentuser);
                     startActivity(intent);
                 }else if(position==5){
 //                    Intent intent=new Intent(getActivity(),InboxActivity.class);
@@ -91,67 +115,13 @@ public class LoggedInFragment extends Fragment {
                 }
             }
         });
-        upDateLoginDevice();
+
         return  view;
     }
 
-    private void upDateLoginDevice() {
-
-
-        final SaveData saveData=new SaveData(getActivity());
-        final String loginDeviceId=saveData.getDeviceId();
-
-        Toast.makeText(getActivity(),"Login device ID is: \t "+loginDeviceId,Toast.LENGTH_SHORT).show();
-
-
-        BackendlessDataQuery query=new BackendlessDataQuery();
-        //Toast.makeText(getActivity(),"Current User name:\t"+saveData.getCurrentUser(),Toast.LENGTH_SHORT).show();
-
-        query.setWhereClause(String.format("name= '%s'",saveData.getCurrentUser()));
-        Backendless.Persistence.of(BackendlessUser.class).find(query, new AsyncCallback<BackendlessCollection<BackendlessUser>>() {
-            @Override
-            public void handleResponse(BackendlessCollection<BackendlessUser> response) {
-                List<BackendlessUser> users=response.getData();
-                Toast.makeText(getActivity(),"The Users Size"+users.size(),Toast.LENGTH_SHORT).show();
-
-                String cUser=saveData.getCurrentUser();
-                String dID=saveData.getDeviceId();
-                Toast.makeText(getActivity(),"User Name is :\t "+cUser+" and device ID is: \t "+dID,Toast.LENGTH_SHORT).show();
-
-
-                for(BackendlessUser user:users) {
-                    String storedId = user.getProperty("deviceID").toString();
-                    if (loginDeviceId != storedId) {
-
-
-                        Toast.makeText(getActivity(),"User Name is :\t "+cUser+" and device ID is: \t "+dID,Toast.LENGTH_SHORT).show();
-                        user.setProperty("deviceID", loginDeviceId);
-                        Backendless.Persistence.save(user, new AsyncCallback<BackendlessUser>() {
-                            @Override
-                            public void handleResponse(BackendlessUser response) {
-                                Toast.makeText(getActivity(), "The Device ID updated", Toast.LENGTH_SHORT).show();
-                            }
-
-                            @Override
-                            public void handleFault(BackendlessFault fault) {
-
-                            }
-                        });
-                    }
-                }
-            }
-
-            @Override
-            public void handleFault(BackendlessFault fault) {
-
-            }
-        });
-
-
-
-
     }
 
 
-}
+
+
 

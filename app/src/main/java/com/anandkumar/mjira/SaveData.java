@@ -28,21 +28,14 @@ public class SaveData {
         editor = pref.edit();
     }
 
-    public String getCurrentUser() {
-        return pref.getString(CURRENT_USER, null);
-    }
 
-    public void setCurrentUser(String user){
-        editor.putString(CURRENT_USER, user);
-        editor.commit();
-    }
 
     public String getDeviceId() {
         return pref.getString(DEVICE_ID, null);
     }
 
-    public void setDeviceId(String user){
-        editor.putString(DEVICE_ID, user);
+    public void setDeviceId(String deviceId){
+        editor.putString(DEVICE_ID, deviceId);
         editor.commit();
     }
 

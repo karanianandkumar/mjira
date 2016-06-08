@@ -46,7 +46,7 @@ public class LoginFragment extends Fragment {
             @Override
             public void onClick(View v) {
 
-                String userName=userNameField.getText().toString();
+                final String userName=userNameField.getText().toString();
                 String password=passwordField.getText().toString();
 
 
@@ -57,13 +57,10 @@ public class LoginFragment extends Fragment {
                                 "Succefully Loged in",
                                 Toast.LENGTH_SHORT
                         ).show();
-                        SaveData saveData=new SaveData(getActivity());
-                        saveData.setCurrentUser(response.getProperty("name").toString());
-                        //saveData.setDeviceId(response.getProperty("deviceID").toString());
 
-                        Toast.makeText(getActivity(),"Device ID is: \t "+saveData.getDeviceId(),Toast.LENGTH_SHORT).show();
-                        Intent intent=new Intent(getActivity(),MainActivity.class);
-                        startActivity(intent);
+
+                       Intent intent=new Intent(getActivity(),MainActivity.class);
+                       startActivity(intent);
                     }
 
                     @Override

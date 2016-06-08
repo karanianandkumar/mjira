@@ -38,13 +38,15 @@ public class AddDeviceFragment extends Fragment {
         dName=(EditText)view.findViewById(R.id.deviceName);
         dIMEI=(EditText)view.findViewById(R.id.deviceIMEI);
         addButton=(Button)view.findViewById(R.id.addDevice);
-        final SaveData saveData=new SaveData(getActivity());
+
+        Intent intent=getActivity().getIntent();
+        final String currentUser=intent.getStringExtra("currentUser");
 
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Device device=new Device();
-                device.setOwner(saveData.getCurrentUser());
+                device.setOwner(currentUser);
                 device.setName(dName.getText().toString());
                 device.setImei(dIMEI.getText().toString());
                 addNewDetails(device);
