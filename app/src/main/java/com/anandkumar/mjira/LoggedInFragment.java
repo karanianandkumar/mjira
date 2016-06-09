@@ -62,9 +62,9 @@ public class LoggedInFragment extends Fragment {
 
             }
         });
-
+        Preferences saveData=new Preferences();
         Toast.makeText(getActivity(),"Current User is :\t"+ Currentuser,Toast.LENGTH_SHORT).show();
-        Toast.makeText(getActivity(),"Device Id  is :\t"+ new SaveData(getActivity().getApplicationContext()).getDeviceId(),Toast.LENGTH_SHORT).show();
+        Toast.makeText(getActivity(),"Device Id  is :\t"+ saveData.readString(getActivity().getApplicationContext(),saveData.DEVICE_ID,null),Toast.LENGTH_SHORT).show();
 
 
         loggedInLV=(ListView) view.findViewById(R.id.loggedInpage);

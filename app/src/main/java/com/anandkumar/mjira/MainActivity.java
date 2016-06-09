@@ -25,11 +25,12 @@ public class MainActivity extends AppCompatActivity {
 
         Backendless.initApp(this, APP_ID, SECRET_KEY, VERSION);
 
-        final SaveData saveData = new SaveData(getApplicationContext());
+        final Preferences saveData = new Preferences();
 
-        final String deviceId = saveData.getDeviceId();
+        final String deviceId = saveData.readString(getApplicationContext(),saveData.DEVICE_ID,null);
 
         Toast.makeText(MainActivity.this,"Registed Device Id is 1:\t"+deviceId,Toast.LENGTH_SHORT).show();
+        Toast.makeText(MainActivity.this,"Current User Name is:\t"+saveData.readString(getApplicationContext(),saveData.USER_NAME,null),Toast.LENGTH_SHORT).show();
 
         Backendless.Messaging.registerDevice(GCMSENDER_ID);
 
@@ -38,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void handleResponse(DeviceRegistration response) {
                     Toast.makeText(MainActivity.this, "Registed Device Id is 2:\t" + response.getDeviceId(), Toast.LENGTH_SHORT).show();
-                    saveData.setDeviceId(response.getDeviceId());
+                    saveData.writeString(getApplicationContext(),saveData.DEVICE_ID,response.getDeviceId());;
                 }
 
                 @Override
@@ -48,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
             });
 
         }
-        Toast.makeText(MainActivity.this,"Registed Device Id is 3 : \t"+saveData.getDeviceId(),Toast.LENGTH_SHORT).show();
+        Toast.makeText(MainActivity.this,"Registed Device Id is 3 : \t"+saveData.readString(getApplicationContext(),saveData.DEVICE_ID,null),Toast.LENGTH_SHORT).show();
 
             if (Backendless.UserService.loggedInUser() == "") {
                 MenuFragment menuFragment = new MenuFragment();

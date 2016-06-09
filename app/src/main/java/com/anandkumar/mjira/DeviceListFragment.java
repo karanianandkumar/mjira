@@ -62,7 +62,7 @@ public class DeviceListFragment extends Fragment {
                 deviceList);
         deviceListView.setAdapter(deviceListAdapter);
 
-        SaveData saveData=new SaveData(getActivity().getApplicationContext());
+
 
 
         getDeviceList(currentUser);

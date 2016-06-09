@@ -58,6 +58,8 @@ public class LoginFragment extends Fragment {
                                 Toast.LENGTH_SHORT
                         ).show();
 
+                        Preferences saveData=new Preferences();
+                        saveData.writeString(getActivity().getApplicationContext(), saveData.USER_NAME, userName);
 
                        Intent intent=new Intent(getActivity(),MainActivity.class);
                        startActivity(intent);

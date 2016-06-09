@@ -43,11 +43,11 @@ public class RegisterFragment extends Fragment {
         usernameField=(EditText)view.findViewById(R.id.userNameField);
         passwordField=(EditText)view.findViewById(R.id.passwordField);
         mailField=(EditText)view.findViewById(R.id.loginMailField);
-        final SaveData saveData=new SaveData(getActivity().getApplicationContext());
+        final Preferences saveData=new Preferences();
 
+        String deviceId_pref=saveData.readString(getActivity().getApplicationContext(),saveData.DEVICE_ID,null);
 
-
-        Toast.makeText(getActivity(), "The register Id  is(4):\t" + saveData.getDeviceId(), Toast.LENGTH_SHORT).show();
+        Toast.makeText(getActivity(), "The register Id  is(4):\t" +deviceId_pref , Toast.LENGTH_SHORT).show();
 
         registerButton=(Button)view.findViewById(R.id.register);
         registerButton.setOnClickListener(new View.OnClickListener() {
@@ -63,9 +63,9 @@ public class RegisterFragment extends Fragment {
                 backendlessUser.setProperty("name",username);
                 backendlessUser.setEmail(mail);
 
-                backendlessUser.setProperty("device",saveData.getDeviceId());
+                backendlessUser.setProperty("device",saveData.readString(getActivity().getApplicationContext(),saveData.DEVICE_ID,null));
 
-                Toast.makeText(getActivity(), "The register Id  is(5):\t" + saveData.getDeviceId(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), "The register Id  is(5):\t" + saveData.readString(getActivity().getApplicationContext(),saveData.DEVICE_ID,null), Toast.LENGTH_SHORT).show();
 
 
 
