@@ -13,7 +13,6 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.backendless.Backendless;
-import com.backendless.BackendlessUser;
 import com.backendless.async.callback.AsyncCallback;
 import com.backendless.exceptions.BackendlessFault;
 
@@ -47,22 +46,9 @@ public class LoggedInFragment extends Fragment {
                 "Device Requests"
         };
 
-         String user= Backendless.UserService.loggedInUser();
 
-
-        Backendless.UserService.findById(user, new AsyncCallback<BackendlessUser>() {
-            @Override
-            public void handleResponse(BackendlessUser response) {
-
-               Currentuser =response.getProperty("name").toString();
-            }
-
-            @Override
-            public void handleFault(BackendlessFault fault) {
-
-            }
-        });
         Preferences saveData=new Preferences();
+        Currentuser=saveData.readString(getActivity().getApplicationContext(),saveData.USER_NAME,null);
         Toast.makeText(getActivity(),"Current User is :\t"+ Currentuser,Toast.LENGTH_SHORT).show();
         Toast.makeText(getActivity(),"Device Id  is :\t"+ saveData.readString(getActivity().getApplicationContext(),saveData.DEVICE_ID,null),Toast.LENGTH_SHORT).show();
 
