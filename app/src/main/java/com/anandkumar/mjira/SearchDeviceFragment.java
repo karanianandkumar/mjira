@@ -20,6 +20,7 @@ import com.backendless.BackendlessCollection;
 import com.backendless.async.callback.AsyncCallback;
 import com.backendless.exceptions.BackendlessFault;
 import com.backendless.persistence.BackendlessDataQuery;
+import com.backendless.persistence.QueryOptions;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -57,8 +58,8 @@ public class SearchDeviceFragment extends Fragment {
                 queryResult
         );
 
-        Intent intent1=getActivity().getIntent();
-        final String currentUser=intent1.getStringExtra("currentUser");
+        Preferences saveData=new Preferences();
+        final String currentUser=saveData.readString(getActivity().getApplicationContext(),saveData.USER_NAME,null);
 
 
         searchButton=(Button)view.findViewById(R.id.searchButton);
@@ -94,14 +95,12 @@ public class SearchDeviceFragment extends Fragment {
 
 
 
-
-
-
-
-
-
         BackendlessDataQuery query=new BackendlessDataQuery();
         query.setWhereClause(String.format("name LIKE '%s' and owner!= '%s' ",device+"%",user));
+
+        QueryOptions options=new QueryOptions();
+        options.addSortByOption("name ASC");
+        query.setQueryOptions(options);
 
         Backendless.Persistence.of(Device.class).find(query, new AsyncCallback<BackendlessCollection<Device>>() {
             @Override

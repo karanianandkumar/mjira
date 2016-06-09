@@ -50,7 +50,7 @@ public class DeviceDetailsFragment extends Fragment {
         requestButton=(Button) view.findViewById(R.id.requestButton);
 
         final Intent intent=getActivity().getIntent();
-        String deviceNameString=intent.getStringExtra("name").toString();
+        final String deviceNameString=intent.getStringExtra("name").toString();
         final String currentUser=intent.getStringExtra("currentUser");
         final String deviceOwnerString=intent.getStringExtra("toUser").toString();
         final String deviceImeiString=intent.getStringExtra("imei").toString();
@@ -60,7 +60,7 @@ public class DeviceDetailsFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 final DeviceRequest deviceRequest=new DeviceRequest();
-
+                deviceRequest.setName(deviceNameString);
                 deviceRequest.setImei(deviceImeiString);
                 deviceRequest.setToUser(deviceOwnerString);
                 deviceRequest.setAccepted(false);
@@ -76,8 +76,6 @@ public class DeviceDetailsFragment extends Fragment {
                     @Override
                     public void handleResponse(DeviceRequest response) {
                         Toast.makeText(getActivity(),"Device Request Succesfully Sent",Toast.LENGTH_SHORT).show();
-
-
 
                     }
 
@@ -109,12 +107,15 @@ public class DeviceDetailsFragment extends Fragment {
                             PublishOptions publishOptions = new PublishOptions();
                             publishOptions.putHeader( "android-ticker-text", "You just got a Device Request!" );
                             publishOptions.putHeader( "android-content-title", "From "+ currentUser );
-                            publishOptions.putHeader( "android-content-text", "Reg:" +deviceImeiString);
+                            publishOptions.putHeader( "android-content-text", "Reg:" +deviceNameString+"::"+deviceImeiString);
 
                             Backendless.Messaging.publish("this is a private message!", publishOptions, deliveryOptions, new AsyncCallback<MessageStatus>() {
                                 @Override
                                 public void handleResponse(MessageStatus response) {
                                     Toast.makeText(getActivity(),"Push message sent to "+deviceId,Toast.LENGTH_SHORT).show();
+                                    Intent intent=new Intent(getActivity(),SearchDeviceActivity.class);
+                                    startActivity(intent);
+
                                 }
 
                                 @Override

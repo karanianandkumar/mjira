@@ -8,12 +8,22 @@ public class DeviceRequest {
     private String toUser;
     private String imei;
     private boolean isAccepted;
+    private String name;
 
     public DeviceRequest() {
        this.fromUser="";
         this.toUser="";
         this.imei="";
         this.isAccepted=false;
+        this.name="";
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getFromUser() {

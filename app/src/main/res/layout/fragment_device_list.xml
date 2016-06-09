@@ -31,8 +31,8 @@
             android:divider="#00000000"
             android:dividerHeight="0dp"
             android:fadingEdge="none"
-            android:persistentDrawingCache="scrolling"
-            android:smoothScrollbar="false" >
+
+            android:smoothScrollbar="true" >
         </ListView>
     </LinearLayout>
     <!--<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"-->

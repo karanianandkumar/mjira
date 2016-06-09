@@ -4,7 +4,6 @@ package com.anandkumar.mjira;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +16,7 @@ import com.backendless.BackendlessCollection;
 import com.backendless.async.callback.AsyncCallback;
 import com.backendless.exceptions.BackendlessFault;
 import com.backendless.persistence.BackendlessDataQuery;
+import com.backendless.persistence.QueryOptions;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -78,14 +78,18 @@ public class DeviceListFragment extends Fragment {
         BackendlessDataQuery query=new BackendlessDataQuery();
         query.setWhereClause(String.format("owner= '%s'",user));
 
+        QueryOptions options=new QueryOptions();
+        options.addSortByOption("name ASC");
+        query.setQueryOptions(options);
+
         Backendless.Persistence.of(Device.class).find(query, new AsyncCallback<BackendlessCollection<Device>>() {
             @Override
             public void handleResponse(BackendlessCollection<Device> response) {
                 List<Device> dList=response.getData();
 
                 for(Device devicelist:dList){
-                    deviceList.add(devicelist.getImei());
-                    Log.d("IMEI","  is: "+devicelist.getImei());
+                    deviceList.add(devicelist.getName()+"::"+devicelist.getImei());
+
                 }
                 deviceListAdapter.notifyDataSetChanged();
                 linlaHeaderProgress.setVisibility(View.GONE);
