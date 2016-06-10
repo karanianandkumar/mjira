@@ -22,18 +22,26 @@
     </LinearLayout>
 
 
-        <ListView
-            android:id="@+id/deviceList"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:layout_weight="1"
-            android:cacheColorHint="@android:color/transparent"
-            android:divider="#00000000"
-            android:dividerHeight="0dp"
-            android:fadingEdge="none"
+        <!--<ListView-->
+            <!--android:id="@+id/deviceList"-->
+            <!--android:layout_width="fill_parent"-->
+            <!--android:layout_height="fill_parent"-->
+            <!--android:layout_weight="1"-->
+            <!--android:cacheColorHint="@android:color/transparent"-->
+            <!--android:divider="#00000000"-->
+            <!--android:dividerHeight="0dp"-->
+            <!--android:fadingEdge="none"-->
 
-            android:smoothScrollbar="true" >
-        </ListView>
+            <!--android:smoothScrollbar="true" >-->
+        <!--</ListView>-->
+
+    <android.support.v7.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbars="vertical"
+        android:background="#f5f7f8"
+        android:id="@+id/rv_deviceList"
+        />
     </LinearLayout>
     <!--<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"-->
 <!--xmlns:tools="http://schemas.android.com/tools"-->

@@ -4,12 +4,13 @@ package com.anandkumar.mjira;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 
 import com.backendless.Backendless;
 import com.backendless.BackendlessCollection;
@@ -18,7 +19,6 @@ import com.backendless.exceptions.BackendlessFault;
 import com.backendless.persistence.BackendlessDataQuery;
 import com.backendless.persistence.QueryOptions;
 
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -27,11 +27,12 @@ import java.util.List;
  */
 public class DeviceListFragment extends Fragment {
 
-    private ArrayList<String> deviceList;
-    private ListView deviceListView;
+   /* private ArrayList<String> deviceList;
+    private ListView deviceListView;*/
 
+    private RecyclerView recyclerView;
 
-    private ArrayAdapter<String> deviceListAdapter;
+   // private ArrayAdapter<String> deviceListAdapter;
 
     private LinearLayout linlaHeaderProgress;
 
@@ -47,13 +48,26 @@ public class DeviceListFragment extends Fragment {
         View view= inflater.inflate(R.layout.fragment_device_list, container, false);
 
 
+        recyclerView=(RecyclerView)view.findViewById(R.id.rv_deviceList);
+        recyclerView.setHasFixedSize(true);
+
+        RecyclerView.ItemAnimator itemAnimator = new DefaultItemAnimator();
+        itemAnimator.setAddDuration(1000);
+        itemAnimator.setRemoveDuration(1000);
+        recyclerView.setItemAnimator(itemAnimator);
+
+        LinearLayoutManager llm = new LinearLayoutManager(getActivity());
+        recyclerView.setLayoutManager(llm);
+
+
+
         linlaHeaderProgress = (LinearLayout)view.findViewById(R.id.linlaHeaderProgress);
         linlaHeaderProgress.setVisibility(View.VISIBLE);
 
         Intent intent=getActivity().getIntent();
         String currentUser=intent.getStringExtra("currentUser");
 
-        deviceListView=(ListView)view.findViewById(R.id.deviceList);
+       /* deviceListView=(ListView)view.findViewById(R.id.deviceList);
 
         deviceList=new ArrayList<String>();
 
@@ -61,7 +75,7 @@ public class DeviceListFragment extends Fragment {
                 android.R.layout.simple_list_item_1,
                 deviceList);
         deviceListView.setAdapter(deviceListAdapter);
-
+*/
 
 
 
@@ -86,12 +100,15 @@ public class DeviceListFragment extends Fragment {
             @Override
             public void handleResponse(BackendlessCollection<Device> response) {
                 List<Device> dList=response.getData();
-
+/*
                 for(Device devicelist:dList){
                     deviceList.add(devicelist.getName()+"::"+devicelist.getImei());
 
                 }
-                deviceListAdapter.notifyDataSetChanged();
+                deviceListAdapter.notifyDataSetChanged();*/
+
+                DeviceListAdapter adapter = new DeviceListAdapter(dList);
+                recyclerView.setAdapter(adapter);
                 linlaHeaderProgress.setVisibility(View.GONE);
             }
 
