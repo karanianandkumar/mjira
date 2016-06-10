@@ -127,10 +127,11 @@ public class IncomingRequestFragment extends Fragment {
                             device.setOwner(dRequest.getFromUser());
                             Backendless.Persistence.save(device, new AsyncCallback<Device>() {
                                 @Override
-                                public void handleResponse(Device response) {
+                                public void handleResponse(Device deviceResponse) {
                                     Toast.makeText(getActivity(),"Device Request Accepted Successfully",Toast.LENGTH_SHORT).show();
 
-
+                                    final String dName=deviceResponse.getName();
+                                    final String dImei=deviceResponse.getImei();
 
                                     BackendlessDataQuery query=new BackendlessDataQuery();
                                     query.setWhereClause(String.format("name= '%s'",dRequest.getFromUser()));
@@ -145,6 +146,12 @@ public class IncomingRequestFragment extends Fragment {
                                                 final String deviceId=user.getProperty("device").toString();
 
 
+                                                Preferences saveData=new Preferences();
+
+                                                String uname=saveData.readString(getActivity().getApplicationContext(),saveData.USER_NAME,null);
+
+
+
                                                 Toast.makeText(getActivity(),"Push message sent to "+deviceId,Toast.LENGTH_SHORT).show();
 
                                                 DeliveryOptions deliveryOptions = new DeliveryOptions();
@@ -152,8 +159,8 @@ public class IncomingRequestFragment extends Fragment {
 
                                                 PublishOptions publishOptions = new PublishOptions();
                                                 publishOptions.putHeader( "android-ticker-text", "Your Device Request is Accepted!" );
-                                                publishOptions.putHeader( "android-content-title","" );
-                                                publishOptions.putHeader( "android-content-text", "Reg:" +user.getProperty("imei"));
+                                                publishOptions.putHeader( "android-content-title","Your Device Request is accepted by "+ uname);
+                                                publishOptions.putHeader( "android-content-text", "Reg:" + dName+"::"+dImei);
 
                                                 Backendless.Messaging.publish("this is a private message!", publishOptions, deliveryOptions, new AsyncCallback<MessageStatus>() {
                                                     @Override
@@ -212,7 +219,7 @@ public class IncomingRequestFragment extends Fragment {
             public void handleResponse(BackendlessCollection<DeviceRequest> response) {
                 List<DeviceRequest> incomingRequests=response.getData();
                 for(DeviceRequest request:incomingRequests ){
-                    fromUsers.add(request.getFromUser()+"::"+request.getImei());
+                    fromUsers.add(request.getFromUser()+"::"+request.getName());
                     deviceRequests.add(request);
 
                 }
