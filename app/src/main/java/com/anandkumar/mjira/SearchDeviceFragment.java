@@ -4,14 +4,15 @@ package com.anandkumar.mjira;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -22,7 +23,6 @@ import com.backendless.exceptions.BackendlessFault;
 import com.backendless.persistence.BackendlessDataQuery;
 import com.backendless.persistence.QueryOptions;
 
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -34,10 +34,14 @@ public class SearchDeviceFragment extends Fragment {
     private Button searchButton;
     private EditText searchET;
     private ListView searchResults;
-    private ArrayList<String> queryResult;
-    private ArrayList<Device> queryDeviceList;
-    private ArrayAdapter<String> queryResultAdapter;
+    private SearchDeviceAdapter adapter;
+
     Intent intent;
+
+    private RecyclerView recyclerView;
+
+    private LinearLayout linlaHeaderProgress;
+
 
     public SearchDeviceFragment() {
         // Required empty public constructor
@@ -48,15 +52,18 @@ public class SearchDeviceFragment extends Fragment {
     public View onCreateView(final LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view= inflater.inflate(R.layout.fragment_search_device, container, false);
+        final View view= inflater.inflate(R.layout.fragment_search_device, container, false);
 
-        queryResult=new ArrayList<String>();
-        queryDeviceList=new ArrayList<Device>();
-        queryResultAdapter=new ArrayAdapter<String>(
-                getActivity(),
-                android.R.layout.simple_list_item_1,
-                queryResult
-        );
+        recyclerView=(RecyclerView)view.findViewById(R.id.rv_searchList);
+        recyclerView.setHasFixedSize(true);
+
+
+        LinearLayoutManager llm = new LinearLayoutManager(getActivity());
+        recyclerView.setLayoutManager(llm);
+
+
+
+
 
         Preferences saveData=new Preferences();
         final String currentUser=saveData.readString(getActivity().getApplicationContext(),saveData.USER_NAME,null);
@@ -64,67 +71,83 @@ public class SearchDeviceFragment extends Fragment {
 
         searchButton=(Button)view.findViewById(R.id.searchButton);
         searchET=(EditText)view.findViewById(R.id.searchET);
-        searchResults=(ListView)view.findViewById(R.id.searchResults);
 
-        searchResults.setAdapter(queryResultAdapter);
 
-        searchResults.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+
+        recyclerView.addOnItemTouchListener(new RecyclerViewItemClickListener(getActivity(), recyclerView, new RecyclerViewItemClickListener.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            public void onItemClick(View view, int position) {
                 intent=new Intent(getActivity(),DeviceDetails.class);
-                intent.putExtra("toUser",queryDeviceList.get(position).getOwner());
-                intent.putExtra("name",queryDeviceList.get(position).getName());
-                intent.putExtra("imei",queryDeviceList.get(position).getImei());
+                Device clickedDevice=adapter.getDevice(position);
+                intent.putExtra("toUser",clickedDevice.getOwner());
+                intent.putExtra("name",clickedDevice.getName());
+                intent.putExtra("imei",clickedDevice.getImei());
                 intent.putExtra("currentUser",currentUser);
 
                 startActivity(intent);
+
             }
-        });
-        searchButton.setOnClickListener(new View.OnClickListener() {
+
             @Override
-            public void onClick(View v) {
-                queryResult.clear();
-                String device=searchET.getText().toString();
-                searchForDevice(device,currentUser);
+            public void onItemLongClick(View view, int position) {
+                //Toast.makeText(MainActivity.this,"Long Press",Toast.LENGTH_SHORT).show();
+
             }
-        });
-        return view;
-    }
-
-    private void searchForDevice(final String device,String user) {
+        }));
 
 
+                searchButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        // queryResult.clear();
+                        String device = searchET.getText().toString();
+                        searchForDevice(device, currentUser);
+                        linlaHeaderProgress = (LinearLayout)view.findViewById(R.id.linlaHeaderProgress);
+                        linlaHeaderProgress.setVisibility(View.VISIBLE);
+                    }
+                });
+                return view;
+            }
 
-        BackendlessDataQuery query=new BackendlessDataQuery();
-        query.setWhereClause(String.format("name LIKE '%s' and owner!= '%s' ",device+"%",user));
+            private void searchForDevice(final String device, String user) {
 
-        QueryOptions options=new QueryOptions();
-        options.addSortByOption("name ASC");
-        query.setQueryOptions(options);
 
-        Backendless.Persistence.of(Device.class).find(query, new AsyncCallback<BackendlessCollection<Device>>() {
-            @Override
-            public void handleResponse(BackendlessCollection<Device> response) {
-                List<Device> resultData=response.getData();
-                Log.d("No.of Devices:\t",": "+resultData.size());
-                if(resultData.size()!=0){
-                    for(Device resultDevice:resultData){
-                        queryResult.add(resultDevice.getOwner()+"::"+resultDevice.getImei() );
-                        queryDeviceList.add(resultDevice);
+                BackendlessDataQuery query = new BackendlessDataQuery();
+                query.setWhereClause(String.format("name LIKE '%s' and owner!= '%s' ", device + "%", user));
+
+                QueryOptions options = new QueryOptions();
+                options.addSortByOption("name ASC");
+                query.setQueryOptions(options);
+
+                Backendless.Persistence.of(Device.class).find(query, new AsyncCallback<BackendlessCollection<Device>>() {
+                    @Override
+                    public void handleResponse(BackendlessCollection<Device> response) {
+                        List<Device> resultData = response.getData();
+                        int size=resultData.size();
+                        Log.d("No.of Devices:\t", ": " +size );
+                        if(size==0){
+                            Toast.makeText(getActivity(), "No Devices!!", Toast.LENGTH_SHORT).show();
+
+
+                        }else {
+                             adapter = new SearchDeviceAdapter(resultData);
+                            recyclerView.setAdapter(adapter);
+                        }
+                        linlaHeaderProgress.setVisibility(View.GONE);
+
                     }
 
-                    queryResultAdapter.notifyDataSetChanged();
 
+                    @Override
+                    public void handleFault(BackendlessFault fault) {
+                        Toast.makeText(getActivity(),fault.getMessage(), Toast.LENGTH_SHORT).show();
+                        linlaHeaderProgress.setVisibility(View.GONE);
+                    }
+                });
 
-                }
             }
 
-            @Override
-            public void handleFault(BackendlessFault fault) {
-                Toast.makeText(getActivity(),"No Devices!!",Toast.LENGTH_SHORT).show();
-            }
-        });
+        }
 
-    }
 
-}
