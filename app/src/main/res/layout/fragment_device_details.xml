@@ -2,74 +2,104 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
-    tools:context="com.anandkumar.mjira.DeviceDetailsFragment">
+    tools:context="com.anandkumar.mjira.DeviceDetailsFragment"
+    android:padding="5dp">
 
     <!-- TODO: Update blank fragment layout -->
+
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        card_view:cardCornerRadius="4dp"
+        card_view:cardElevation="8dp"
+        android:layout_gravity="center"
+        android:id="@+id/cv"
+                >
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="10dp">
 
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        >
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/device_name"
+            android:text="Device Name: "
+            android:textSize="15sp"
 
             />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-
+            android:textSize="18sp"
+            android:paddingLeft="10dp"
             android:id="@+id/dName" />
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:paddingTop="10dp">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/deviceIMEI"
+            android:text="IMEI: "
+            android:textSize="18sp"
 
            />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-
+            android:paddingLeft="10dp"
+            android:textSize="18sp"
             android:id="@+id/dIMEI" />
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:paddingTop="10dp">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/deviceOwner"
-
+            android:text="Owner: "
+            android:textSize="15sp"
             />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-
+            android:paddingLeft="10dp"
+            android:textSize="18sp"
             android:id="@+id/dOwner" />
     </LinearLayout>
 
-    <Button
+    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/requestButton"
         android:text="Request"
+        android:padding="10dp"
+        android:paddingRight="20dp"
+        android:textSize="20sp"
+        android:textColor="#24d1ce"
         android:layout_gravity="right"/>
 
+</LinearLayout>
 
+</android.support.v7.widget.CardView>
 </LinearLayout>

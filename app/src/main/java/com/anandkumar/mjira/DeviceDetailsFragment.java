@@ -7,7 +7,6 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -32,7 +31,7 @@ public class DeviceDetailsFragment extends Fragment {
     private TextView deviceOwner;
     private TextView deviceName;
     private TextView deviceImei;
-    private Button requestButton;
+    private TextView requestButton;
 
     public DeviceDetailsFragment() {
         // Required empty public constructor
@@ -47,7 +46,7 @@ public class DeviceDetailsFragment extends Fragment {
         deviceName=(TextView)view.findViewById(R.id.dName);
         deviceOwner=(TextView)view.findViewById(R.id.dOwner);
         deviceImei=(TextView)view.findViewById(R.id.dIMEI);
-        requestButton=(Button) view.findViewById(R.id.requestButton);
+        requestButton=(TextView) view.findViewById(R.id.requestButton);
 
         final Intent intent=getActivity().getIntent();
         final String deviceNameString=intent.getStringExtra("name").toString();
