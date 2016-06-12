@@ -7,10 +7,12 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.backendless.Backendless;
 import com.backendless.BackendlessCollection;
@@ -31,6 +33,7 @@ public class DeviceListFragment extends Fragment {
     private ListView deviceListView;*/
 
     private RecyclerView recyclerView;
+    private DeviceListAdapter adapter;
 
    // private ArrayAdapter<String> deviceListAdapter;
 
@@ -67,16 +70,6 @@ public class DeviceListFragment extends Fragment {
         Intent intent=getActivity().getIntent();
         String currentUser=intent.getStringExtra("currentUser");
 
-       /* deviceListView=(ListView)view.findViewById(R.id.deviceList);
-
-        deviceList=new ArrayList<String>();
-
-        deviceListAdapter=new ArrayAdapter<String>(getActivity(),
-                android.R.layout.simple_list_item_1,
-                deviceList);
-        deviceListView.setAdapter(deviceListAdapter);
-*/
-
 
 
         getDeviceList(currentUser);
@@ -100,15 +93,19 @@ public class DeviceListFragment extends Fragment {
             @Override
             public void handleResponse(BackendlessCollection<Device> response) {
                 List<Device> dList=response.getData();
-/*
-                for(Device devicelist:dList){
-                    deviceList.add(devicelist.getName()+"::"+devicelist.getImei());
 
+                int size=dList.size();
+                Log.d("No.of Devices:\t", ": " +size );
+                if(size==0){
+                    Toast.makeText(getActivity(), "No Devices!!", Toast.LENGTH_SHORT).show();
+
+
+                }else {
+                     adapter = new DeviceListAdapter(dList);
+                    recyclerView.setAdapter(adapter);
                 }
-                deviceListAdapter.notifyDataSetChanged();*/
 
-                DeviceListAdapter adapter = new DeviceListAdapter(dList);
-                recyclerView.setAdapter(adapter);
+
                 linlaHeaderProgress.setVisibility(View.GONE);
             }
 

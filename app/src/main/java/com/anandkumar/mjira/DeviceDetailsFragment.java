@@ -7,6 +7,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -33,6 +34,8 @@ public class DeviceDetailsFragment extends Fragment {
     private TextView deviceImei;
     private TextView requestButton;
 
+    private LinearLayout requestSpinner;
+
     public DeviceDetailsFragment() {
         // Required empty public constructor
     }
@@ -47,6 +50,7 @@ public class DeviceDetailsFragment extends Fragment {
         deviceOwner=(TextView)view.findViewById(R.id.dOwner);
         deviceImei=(TextView)view.findViewById(R.id.dIMEI);
         requestButton=(TextView) view.findViewById(R.id.requestButton);
+        requestSpinner = (LinearLayout)view.findViewById(R.id.cv_requestDevice);
 
         final Intent intent=getActivity().getIntent();
         final String deviceNameString=intent.getStringExtra("name").toString();
@@ -58,6 +62,8 @@ public class DeviceDetailsFragment extends Fragment {
         requestButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                requestSpinner.setVisibility(View.VISIBLE);
                 final DeviceRequest deviceRequest=new DeviceRequest();
                 deviceRequest.setName(deviceNameString);
                 deviceRequest.setImei(deviceImeiString);
@@ -75,12 +81,14 @@ public class DeviceDetailsFragment extends Fragment {
                     @Override
                     public void handleResponse(DeviceRequest response) {
                         Toast.makeText(getActivity(),"Device Request Succesfully Sent",Toast.LENGTH_SHORT).show();
+                        requestSpinner.setVisibility(View.GONE);
 
                     }
 
                     @Override
                     public void handleFault(BackendlessFault fault) {
                         Toast.makeText(getActivity(),"Device Request failed",Toast.LENGTH_SHORT).show();
+                        requestSpinner.setVisibility(View.GONE);
                     }
                 });
 
@@ -93,12 +101,12 @@ public class DeviceDetailsFragment extends Fragment {
                     public void handleResponse(BackendlessCollection<BackendlessUser> response) {
                         List<BackendlessUser> users=response.getData();
 
-                        Toast.makeText(getActivity()," Query result length : \t"+users.size(),Toast.LENGTH_SHORT).show();
+
                         for(BackendlessUser user:users){
                             final String deviceId=user.getProperty("device").toString();
 
 
-                            Toast.makeText(getActivity(),"Push message sent to "+deviceId,Toast.LENGTH_SHORT).show();
+
 
                             DeliveryOptions deliveryOptions = new DeliveryOptions();
                             deliveryOptions.addPushSinglecast( deviceId );
@@ -111,7 +119,7 @@ public class DeviceDetailsFragment extends Fragment {
                             Backendless.Messaging.publish("this is a private message!", publishOptions, deliveryOptions, new AsyncCallback<MessageStatus>() {
                                 @Override
                                 public void handleResponse(MessageStatus response) {
-                                    Toast.makeText(getActivity(),"Push message sent to "+deviceId,Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(getActivity()," Message sent to "+deviceId,Toast.LENGTH_SHORT).show();
                                     Intent intent=new Intent(getActivity(),SearchDeviceActivity.class);
                                     startActivity(intent);
 
@@ -119,7 +127,7 @@ public class DeviceDetailsFragment extends Fragment {
 
                                 @Override
                                 public void handleFault(BackendlessFault fault) {
-                                    Toast.makeText(getActivity(),"Push message sending failed",Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(getActivity(),"Message sending failed",Toast.LENGTH_SHORT).show();
                                 }
                             });
                         }

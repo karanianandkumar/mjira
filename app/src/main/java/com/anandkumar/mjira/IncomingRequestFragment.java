@@ -6,12 +6,14 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.backendless.Backendless;
@@ -24,7 +26,6 @@ import com.backendless.messaging.MessageStatus;
 import com.backendless.messaging.PublishOptions;
 import com.backendless.persistence.BackendlessDataQuery;
 
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -33,9 +34,17 @@ import java.util.List;
  */
 public class IncomingRequestFragment extends Fragment {
 
-    private ArrayList<String> fromUsers;
-    private ArrayList<DeviceRequest> deviceRequests;
-    private ArrayAdapter<String> adapter;
+
+
+    private RecyclerView recyclerView;
+    private LinearLayout linlaHeaderProgress;
+    private LinearLayout cv_linlaHeaderProgress;
+    private String currentUser;
+    DeviceRequest clickedDevice;
+    private int clickedPosition;
+    IncomingRequestAdapter adapter;
+
+
     Intent intent;
 
     public IncomingRequestFragment() {
@@ -49,27 +58,48 @@ public class IncomingRequestFragment extends Fragment {
         // Inflate the layout for this fragment
         View view= inflater.inflate(R.layout.fragment_incoming_request, container, false);
 
+        recyclerView=(RecyclerView)view.findViewById(R.id.rv_deviceList);
+        recyclerView.setHasFixedSize(true);
+
+        RecyclerView.ItemAnimator itemAnimator = new DefaultItemAnimator();
+        itemAnimator.setAddDuration(1000);
+        itemAnimator.setRemoveDuration(1000);
+        recyclerView.setItemAnimator(itemAnimator);
+
+        LinearLayoutManager llm = new LinearLayoutManager(getActivity());
+        recyclerView.setLayoutManager(llm);
+
+        linlaHeaderProgress = (LinearLayout)view.findViewById(R.id.linlaHeaderProgress);
+        linlaHeaderProgress.setVisibility(View.VISIBLE);
 
         intent=getActivity().getIntent();
-        String currentUser=intent.getStringExtra("currentUser");
+        currentUser=intent.getStringExtra("currentUser");
 
-        fromUsers=new ArrayList<String>();
-        deviceRequests=new ArrayList<DeviceRequest>();
-        adapter=new ArrayAdapter<String>(
-                getActivity(),
-                android.R.layout.simple_list_item_1,
-                fromUsers
-        );
 
-        ListView deviceRequests=(ListView)view.findViewById(R.id.deviceRequests);
-        deviceRequests.setAdapter(adapter);
+        recyclerView.addOnItemTouchListener(new RecyclerViewItemClickListener(getActivity(), recyclerView, new RecyclerViewItemClickListener.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
 
+                clickedDevice=adapter.getDevice(position);
+                clickedPosition=position;
+                showAlertDialog(position);
+
+            }
+
+            @Override
+            public void onItemLongClick(View view, int position) {
+                //Toast.makeText(MainActivity.this,"Long Press",Toast.LENGTH_SHORT).show();
+
+            }
+        }));
+
+/*
         deviceRequests.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 showAlertDialog(position);
             }
-        });
+        });*/
 
         //Get name of the current loggedin user
 
@@ -88,7 +118,7 @@ public class IncomingRequestFragment extends Fragment {
     private void showAlertDialog(final int position) {
 
         AlertDialog.Builder dialog=new AlertDialog.Builder(getActivity());
-        dialog.setMessage("Accept Device Request from "+ fromUsers.get(position)+ " ?");
+        dialog.setMessage("Accept Device Request from "+ clickedDevice.getFromUser()+ " ?");
 
         dialog.setNegativeButton("Not Now", new DialogInterface.OnClickListener(){
 
@@ -101,7 +131,7 @@ public class IncomingRequestFragment extends Fragment {
         dialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                acceptRequest(deviceRequests.get(position));
+                acceptRequest(clickedDevice);
             }
         });
 
@@ -110,6 +140,9 @@ public class IncomingRequestFragment extends Fragment {
     }
 
     private void acceptRequest(final DeviceRequest dRequest) {
+
+        cv_linlaHeaderProgress = (LinearLayout)getView().findViewById(R.id.cv_linlaHeaderProgress);
+        cv_linlaHeaderProgress.setVisibility(View.VISIBLE);
 
         dRequest.setAccepted(true);
         Backendless.Persistence.save(dRequest, new AsyncCallback<DeviceRequest>() {
@@ -166,10 +199,15 @@ public class IncomingRequestFragment extends Fragment {
                                                     @Override
                                                     public void handleResponse(MessageStatus response) {
                                                         Toast.makeText(getActivity(),"Push message sent to "+deviceId,Toast.LENGTH_SHORT).show();
+
+                                                        cv_linlaHeaderProgress.setVisibility(View.GONE);
+                                                        adapter.delete(clickedPosition);
+                                                        //getIncomingFriendRequests(currentUser);
                                                     }
 
                                                     @Override
                                                     public void handleFault(BackendlessFault fault) {
+                                                        cv_linlaHeaderProgress.setVisibility(View.GONE);
                                                         Toast.makeText(getActivity(),"Push message sending failed",Toast.LENGTH_SHORT).show();
                                                     }
                                                 });
@@ -218,17 +256,23 @@ public class IncomingRequestFragment extends Fragment {
             @Override
             public void handleResponse(BackendlessCollection<DeviceRequest> response) {
                 List<DeviceRequest> incomingRequests=response.getData();
-                for(DeviceRequest request:incomingRequests ){
-                    fromUsers.add(request.getFromUser()+"::"+request.getName());
-                    deviceRequests.add(request);
 
+                int size=incomingRequests.size();
+                Log.d("No.of Devices:\t", ": " +size );
+                if(size==0){
+                    Toast.makeText(getActivity(), "No Devices!!", Toast.LENGTH_SHORT).show();
+
+                }else {
+                    adapter = new IncomingRequestAdapter(incomingRequests);
+                    recyclerView.setAdapter(adapter);
                 }
-                adapter.notifyDataSetChanged();
+
+                linlaHeaderProgress.setVisibility(View.GONE);
             }
 
             @Override
             public void handleFault(BackendlessFault fault) {
-
+                linlaHeaderProgress.setVisibility(View.GONE);
             }
         });
     }
