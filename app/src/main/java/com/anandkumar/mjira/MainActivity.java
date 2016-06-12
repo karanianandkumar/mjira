@@ -3,6 +3,7 @@ package com.anandkumar.mjira;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.widget.Toast;
 
 import com.backendless.Backendless;
 import com.backendless.DeviceRegistration;
@@ -46,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
             });
 
         }
-       
+        Toast.makeText(MainActivity.this,"Registed Device Id is 3 : \t"+saveData.readString(getApplicationContext(),saveData.DEVICE_ID,null),Toast.LENGTH_SHORT).show();
 
             if (Backendless.UserService.loggedInUser() == "") {
                 MenuFragment menuFragment = new MenuFragment();
