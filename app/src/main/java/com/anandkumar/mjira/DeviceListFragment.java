@@ -4,7 +4,6 @@ package com.anandkumar.mjira;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -22,6 +21,8 @@ import com.backendless.persistence.BackendlessDataQuery;
 import com.backendless.persistence.QueryOptions;
 
 import java.util.List;
+
+import jp.wasabeef.recyclerview.adapters.AlphaInAnimationAdapter;
 
 
 /**
@@ -54,10 +55,7 @@ public class DeviceListFragment extends Fragment {
         recyclerView=(RecyclerView)view.findViewById(R.id.rv_deviceList);
         recyclerView.setHasFixedSize(true);
 
-        RecyclerView.ItemAnimator itemAnimator = new DefaultItemAnimator();
-        itemAnimator.setAddDuration(1000);
-        itemAnimator.setRemoveDuration(1000);
-        recyclerView.setItemAnimator(itemAnimator);
+
 
         LinearLayoutManager llm = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(llm);
@@ -102,7 +100,10 @@ public class DeviceListFragment extends Fragment {
 
                 }else {
                      adapter = new DeviceListAdapter(dList);
-                    recyclerView.setAdapter(adapter);
+                    AlphaInAnimationAdapter alphaAdapter = new AlphaInAnimationAdapter(adapter);
+                    alphaAdapter.setDuration(1000);
+                    recyclerView.setAdapter(alphaAdapter);
+
                 }
 
 

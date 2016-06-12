@@ -28,6 +28,8 @@ import com.backendless.persistence.BackendlessDataQuery;
 
 import java.util.List;
 
+import jp.wasabeef.recyclerview.adapters.AlphaInAnimationAdapter;
+
 
 /**
  * A simple {@link Fragment} subclass.
@@ -264,7 +266,10 @@ public class IncomingRequestFragment extends Fragment {
 
                 }else {
                     adapter = new IncomingRequestAdapter(incomingRequests);
-                    recyclerView.setAdapter(adapter);
+                    AlphaInAnimationAdapter alphaAdapter = new AlphaInAnimationAdapter(adapter);
+                    alphaAdapter.setDuration(1000);
+                    recyclerView.setAdapter(alphaAdapter);
+
                 }
 
                 linlaHeaderProgress.setVisibility(View.GONE);

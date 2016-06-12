@@ -40,17 +40,15 @@ public class LoggedInFragment extends Fragment {
         final View view= inflater.inflate(R.layout.fragment_logged_in, container, false);
         String [] afterLogin={
                 "Devices",
-                "Logout",
                 "Add Device",
                 "Search",
-                "Device Requests"
+                "Device Requests",
+                "Logout"
         };
 
 
         Preferences saveData=new Preferences();
         Currentuser=saveData.readString(getActivity().getApplicationContext(),saveData.USER_NAME,null);
-        Toast.makeText(getActivity(),"Current User is :\t"+ Currentuser,Toast.LENGTH_SHORT).show();
-        Toast.makeText(getActivity(),"Device Id  is :\t"+ saveData.readString(getActivity().getApplicationContext(),saveData.DEVICE_ID,null),Toast.LENGTH_SHORT).show();
 
 
         loggedInLV=(ListView) view.findViewById(R.id.loggedInpage);
@@ -67,7 +65,7 @@ public class LoggedInFragment extends Fragment {
                      Intent intent=new Intent(getActivity(),DeviceListActivity.class);
                     intent.putExtra("currentUser",Currentuser);
                     startActivity(intent);
-                }else if(position==1){
+                }else if(position==4){
 
                     Backendless.UserService.logout(new AsyncCallback<Void>() {
                         @Override
@@ -83,21 +81,18 @@ public class LoggedInFragment extends Fragment {
                             Toast.makeText(getActivity(),"Failed to LogOut",Toast.LENGTH_SHORT).show();
                         }
                     });
-                }else if(position==2){
+                }else if(position==1){
                     Intent intent=new Intent(getActivity(),AddDeviceActivity.class);
                     intent.putExtra("currentUser",Currentuser);
                     startActivity(intent);
-                }else if(position==3){
+                }else if(position==2){
                     Intent intent=new Intent(getActivity(),SearchDeviceActivity.class);
                     intent.putExtra("currentUser",Currentuser);
                     startActivity(intent);
-                }else if(position==4){
+                }else if(position==3){
                     Intent intent=new Intent(getActivity(),IncomingRequestActivity.class);
                     intent.putExtra("currentUser",Currentuser);
                     startActivity(intent);
-                }else if(position==5){
-//                    Intent intent=new Intent(getActivity(),InboxActivity.class);
-//                    startActivity(intent);
                 }
             }
         });

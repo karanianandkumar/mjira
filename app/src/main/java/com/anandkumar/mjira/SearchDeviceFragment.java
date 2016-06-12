@@ -25,6 +25,8 @@ import com.backendless.persistence.QueryOptions;
 
 import java.util.List;
 
+import jp.wasabeef.recyclerview.adapters.AlphaInAnimationAdapter;
+
 
 /**
  * A simple {@link Fragment} subclass.
@@ -132,7 +134,11 @@ public class SearchDeviceFragment extends Fragment {
 
                         }else {
                              adapter = new SearchDeviceAdapter(resultData);
-                            recyclerView.setAdapter(adapter);
+
+                            AlphaInAnimationAdapter alphaAdapter = new AlphaInAnimationAdapter(adapter);
+                            alphaAdapter.setDuration(1000);
+                            recyclerView.setAdapter(alphaAdapter);
+
                         }
                         linlaHeaderProgress.setVisibility(View.GONE);
 

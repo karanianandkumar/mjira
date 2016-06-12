@@ -3,7 +3,6 @@ package com.anandkumar.mjira;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.widget.Toast;
 
 import com.backendless.Backendless;
 import com.backendless.DeviceRegistration;
@@ -29,8 +28,6 @@ public class MainActivity extends AppCompatActivity {
 
         final String deviceId = saveData.readString(getApplicationContext(),saveData.DEVICE_ID,null);
 
-        Toast.makeText(MainActivity.this,"Registed Device Id is 1:\t"+deviceId,Toast.LENGTH_SHORT).show();
-        Toast.makeText(MainActivity.this,"Current User Name is:\t"+saveData.readString(getApplicationContext(),saveData.USER_NAME,null),Toast.LENGTH_SHORT).show();
 
         Backendless.Messaging.registerDevice(GCMSENDER_ID);
 
@@ -38,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
             Backendless.Messaging.getDeviceRegistration(new AsyncCallback<DeviceRegistration>() {
                 @Override
                 public void handleResponse(DeviceRegistration response) {
-                    Toast.makeText(MainActivity.this, "Registed Device Id is 2:\t" + response.getDeviceId(), Toast.LENGTH_SHORT).show();
+
                     saveData.writeString(getApplicationContext(),saveData.DEVICE_ID,response.getDeviceId());;
                 }
 
@@ -49,7 +46,7 @@ public class MainActivity extends AppCompatActivity {
             });
 
         }
-        Toast.makeText(MainActivity.this,"Registed Device Id is 3 : \t"+saveData.readString(getApplicationContext(),saveData.DEVICE_ID,null),Toast.LENGTH_SHORT).show();
+       
 
             if (Backendless.UserService.loggedInUser() == "") {
                 MenuFragment menuFragment = new MenuFragment();
