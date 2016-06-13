@@ -49,7 +49,7 @@
                         android:layout_alignParentTop="true"
 
                         android:gravity="right"
-                        android:textSize="20sp"
+                        android:textSize="15sp"
                         />
 
                 </LinearLayout>
