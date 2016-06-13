@@ -50,8 +50,8 @@ public class MainActivity extends AppCompatActivity {
         Toast.makeText(MainActivity.this,"Registed Device Id is 3 : \t"+saveData.readString(getApplicationContext(),saveData.DEVICE_ID,null),Toast.LENGTH_SHORT).show();
 
             if (Backendless.UserService.loggedInUser() == "") {
-                MenuFragment menuFragment = new MenuFragment();
-                getSupportFragmentManager().beginTransaction().add(R.id.container, menuFragment).commit();
+                Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+                startActivity(intent);
             } else {
 
                 Intent intent = new Intent(MainActivity.this, LoggedInActivity.class);

@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.backendless.Backendless;
@@ -32,6 +33,8 @@ public class LoginFragment extends Fragment {
     private EditText inputName, inputPassword;
     private TextInputLayout inputLayoutName, inputLayoutPassword;
     private Button btnSignIn;
+    private TextView signUpTV;
+
 
 
     public LoginFragment() {
@@ -46,6 +49,7 @@ public class LoginFragment extends Fragment {
         View view= inflater.inflate(R.layout.fragment_login, container, false);
 
 
+
         inputLayoutName = (TextInputLayout) view.findViewById(R.id.input_layout_name);
 
         inputLayoutPassword = (TextInputLayout) view.findViewById(R.id.input_layout_password);
@@ -58,6 +62,14 @@ public class LoginFragment extends Fragment {
 
         inputPassword.addTextChangedListener(new MyTextWatcher(inputPassword));
 
+        signUpTV=(TextView)view.findViewById(R.id.loginSignup);
+        signUpTV.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent=new Intent(getActivity(),RegisterActivity.class);
+                startActivity(intent);
+            }
+        });
         btnSignIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -182,4 +194,7 @@ public class LoginFragment extends Fragment {
             }
         }
     }
+
+
+
 }
