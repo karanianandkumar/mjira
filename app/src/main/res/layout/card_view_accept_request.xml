@@ -18,6 +18,8 @@
         card_view:cardElevation="8dp"
         android:layout_gravity="center"
         android:id="@+id/cv_acceptDevice"
+        android:clickable="true"
+        android:foreground="?android:attr/selectableItemBackground"
         >
 
         <LinearLayout
