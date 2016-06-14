@@ -3,6 +3,7 @@ package com.anandkumar.mjira;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -43,6 +44,11 @@ public class SearchDeviceFragment extends Fragment {
     private RecyclerView recyclerView;
 
     private LinearLayout linlaHeaderProgress;
+    private LinearLayoutManager llm;
+
+    private final String LIST_STATE_KEY = "recycler_state";
+    private static Bundle mBundleRecyclerViewState;
+    Parcelable mListState;
 
 
     public SearchDeviceFragment() {
@@ -60,7 +66,7 @@ public class SearchDeviceFragment extends Fragment {
         recyclerView.setHasFixedSize(true);
 
 
-        LinearLayoutManager llm = new LinearLayoutManager(getActivity());
+        llm = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(llm);
 
 
@@ -154,6 +160,8 @@ public class SearchDeviceFragment extends Fragment {
 
             }
 
-        }
+
+
+}
 
 

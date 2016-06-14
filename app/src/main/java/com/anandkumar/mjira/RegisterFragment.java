@@ -1,6 +1,7 @@
 package com.anandkumar.mjira;
 
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
@@ -35,6 +36,8 @@ public class RegisterFragment extends Fragment {
     private String deviceID;
 
     private Preferences saveData;
+
+    private ProgressDialog progress;
 
     private EditText inputName, inputEmail, inputPassword;
     private TextInputLayout inputLayoutName, inputLayoutEmail, inputLayoutPassword;
@@ -71,13 +74,13 @@ public class RegisterFragment extends Fragment {
         });
 
 
+        progress = new ProgressDialog(getActivity());
+        progress.setTitle("Loading");
+        progress.setMessage("Wait while registrering...");
+        progress.setCancelable(false);
+
 
         String deviceId_pref=saveData.readString(getActivity().getApplicationContext(),saveData.DEVICE_ID,null);
-
-        Toast.makeText(getActivity(), "The register Id  is(4):\t" +deviceId_pref , Toast.LENGTH_SHORT).show();
-
-
-
 
 
 
@@ -114,12 +117,13 @@ public class RegisterFragment extends Fragment {
         backendlessUser.setProperty("device",saveData.readString(getActivity().getApplicationContext(),saveData.DEVICE_ID,null));
 
 
+        progress.show();
 
         Backendless.UserService.register(backendlessUser, new AsyncCallback<BackendlessUser>() {
             @Override
             public void handleResponse(BackendlessUser response) {
 
-
+                progress.dismiss();
                 Toast.makeText(getActivity(),"Successfully Registered...",Toast.LENGTH_SHORT).show();
 
                 Intent intent=new Intent(getActivity(),MainActivity.class);
@@ -128,6 +132,7 @@ public class RegisterFragment extends Fragment {
 
             @Override
             public void handleFault(BackendlessFault fault) {
+                progress.dismiss();
                 Toast.makeText(getActivity(),"User not Registered",Toast.LENGTH_SHORT).show();
             }
         });

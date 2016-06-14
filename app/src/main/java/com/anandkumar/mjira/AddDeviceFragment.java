@@ -1,6 +1,7 @@
 package com.anandkumar.mjira;
 
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -24,6 +25,7 @@ public class AddDeviceFragment extends Fragment {
     private EditText dName;
     private EditText dIMEI;
     private Button addButton;
+    private ProgressDialog progress;
 
     public AddDeviceFragment() {
         // Required empty public constructor
@@ -41,6 +43,13 @@ public class AddDeviceFragment extends Fragment {
 
         Intent intent=getActivity().getIntent();
         final String currentUser=intent.getStringExtra("currentUser");
+
+
+        progress = new ProgressDialog(getActivity());
+        progress.setTitle("Loading");
+        progress.setMessage("Wait while Adding Device...");
+        progress.setCancelable(false);
+
 
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -60,9 +69,11 @@ public class AddDeviceFragment extends Fragment {
 
 
     private void addNewDetails(Device device) {
+        progress.show();
         Backendless.Persistence.save(device, new AsyncCallback<Device>() {
             @Override
             public void handleResponse(Device response) {
+                progress.dismiss();
                 Toast.makeText(getActivity(),"Device Added Successfully",Toast.LENGTH_SHORT).show();
                 Intent intent=new Intent(getActivity(),MainActivity.class);
                 startActivity(intent);
@@ -70,6 +81,7 @@ public class AddDeviceFragment extends Fragment {
 
             @Override
             public void handleFault(BackendlessFault fault) {
+                progress.dismiss();
                 Toast.makeText(getActivity(),"Failed to add Device",Toast.LENGTH_SHORT).show();
             }
         });

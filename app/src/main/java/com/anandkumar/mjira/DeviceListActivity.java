@@ -1,5 +1,6 @@
 package com.anandkumar.mjira;
 
+import android.content.pm.ActivityInfo;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -13,6 +14,8 @@ public class DeviceListActivity extends ActionBarActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT);
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_device_list);
 

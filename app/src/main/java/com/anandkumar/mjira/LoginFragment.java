@@ -1,6 +1,7 @@
 package com.anandkumar.mjira;
 
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
@@ -35,6 +36,8 @@ public class LoginFragment extends Fragment {
     private Button btnSignIn;
     private TextView signUpTV;
 
+    private ProgressDialog progress;
+
 
 
     public LoginFragment() {
@@ -61,6 +64,11 @@ public class LoginFragment extends Fragment {
         inputName.addTextChangedListener(new MyTextWatcher(inputName));
 
         inputPassword.addTextChangedListener(new MyTextWatcher(inputPassword));
+
+         progress = new ProgressDialog(getActivity());
+        progress.setTitle("Loading");
+        progress.setMessage("Wait while logging in...");
+        progress.setCancelable(false);
 
         signUpTV=(TextView)view.findViewById(R.id.loginSignup);
         signUpTV.setOnClickListener(new View.OnClickListener() {
@@ -102,6 +110,8 @@ public class LoginFragment extends Fragment {
         final String userName=inputName.getText().toString();
         String password=inputPassword.getText().toString();
 
+        progress.show();
+
 
 
 
@@ -112,6 +122,10 @@ public class LoginFragment extends Fragment {
                         "Succefully Loged in",
                         Toast.LENGTH_SHORT
                 ).show();
+
+
+
+                progress.dismiss();
 
                 Preferences saveData=new Preferences();
                 saveData.writeString(getActivity().getApplicationContext(), saveData.USER_NAME, userName);
@@ -127,6 +141,8 @@ public class LoginFragment extends Fragment {
                         "Failed to Loged in",
                         Toast.LENGTH_SHORT
                 ).show();
+
+                progress.dismiss();
             }
         },true);
 
