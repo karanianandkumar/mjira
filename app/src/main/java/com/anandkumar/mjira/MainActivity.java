@@ -27,27 +27,31 @@ public class MainActivity extends AppCompatActivity {
 
         final Preferences saveData = new Preferences();
 
-        final String deviceId = saveData.readString(getApplicationContext(),saveData.DEVICE_ID,null);
+        final String deviceId = saveData.readString(getApplicationContext(), saveData.DEVICE_ID, null);
 
+        ConnectionDetector connectionDetector = new ConnectionDetector(getApplicationContext());
+        boolean connection = connectionDetector.isConnectingToInternet();
 
-        Backendless.Messaging.registerDevice(GCMSENDER_ID);
+        if (connection == true) {
+            Backendless.Messaging.registerDevice(GCMSENDER_ID);
 
-        if(deviceId==null) {
-            Backendless.Messaging.getDeviceRegistration(new AsyncCallback<DeviceRegistration>() {
-                @Override
-                public void handleResponse(DeviceRegistration response) {
+            if (deviceId == null) {
+                Backendless.Messaging.getDeviceRegistration(new AsyncCallback<DeviceRegistration>() {
+                    @Override
+                    public void handleResponse(DeviceRegistration response) {
 
-                    saveData.writeString(getApplicationContext(),saveData.DEVICE_ID,response.getDeviceId());;
-                }
+                        saveData.writeString(getApplicationContext(), saveData.DEVICE_ID, response.getDeviceId());
+                        ;
+                    }
 
-                @Override
-                public void handleFault(BackendlessFault fault) {
+                    @Override
+                    public void handleFault(BackendlessFault fault) {
 
-                }
-            });
+                    }
+                });
 
-        }
-        Toast.makeText(MainActivity.this,"Registed Device Id is 3 : \t"+saveData.readString(getApplicationContext(),saveData.DEVICE_ID,null),Toast.LENGTH_SHORT).show();
+            }
+
 
             if (Backendless.UserService.loggedInUser() == "") {
                 Intent intent = new Intent(MainActivity.this, LoginActivity.class);
@@ -57,6 +61,34 @@ public class MainActivity extends AppCompatActivity {
                 Intent intent = new Intent(MainActivity.this, LoggedInActivity.class);
                 startActivity(intent);
             }
-        }
+        }else{
+
+
+            Toast.makeText(this,"Please check Intenet connection",Toast.LENGTH_LONG).show();
+            Intent intent = new Intent(Intent.ACTION_MAIN);
+            intent.addCategory(Intent.CATEGORY_HOME);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+
+               /* AlertDialog.Builder dialog=new AlertDialog.Builder(getApplicationContext());
+                dialog.setMessage("Please Connect to Internet");
+
+
+
+                dialog.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                      finish();
+                    }
+                });
+
+                dialog.create();
+                dialog.show();
+
+                */
+
+    }
+
+    }
     }
 

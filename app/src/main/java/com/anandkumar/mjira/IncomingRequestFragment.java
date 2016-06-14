@@ -95,16 +95,6 @@ public class IncomingRequestFragment extends Fragment {
             }
         }));
 
-/*
-        deviceRequests.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                showAlertDialog(position);
-            }
-        });*/
-
-        //Get name of the current loggedin user
-
 
 
 
