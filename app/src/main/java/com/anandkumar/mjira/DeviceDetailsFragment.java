@@ -33,6 +33,7 @@ public class DeviceDetailsFragment extends Fragment {
     private TextView deviceName;
     private TextView deviceImei;
     private TextView requestButton;
+    boolean isLoading=false;
 
     private LinearLayout requestSpinner;
 
@@ -102,34 +103,39 @@ public class DeviceDetailsFragment extends Fragment {
                         List<BackendlessUser> users=response.getData();
 
 
-                        for(BackendlessUser user:users){
-                            final String deviceId=user.getProperty("device").toString();
+                        for(BackendlessUser user:users) {
+                            final String deviceId = user.getProperty("device").toString();
 
 
+                            if (deviceId != null) {
 
+                                isLoading=true;
+                                DeliveryOptions deliveryOptions = new DeliveryOptions();
+                                deliveryOptions.addPushSinglecast(deviceId);
 
-                            DeliveryOptions deliveryOptions = new DeliveryOptions();
-                            deliveryOptions.addPushSinglecast( deviceId );
+                                PublishOptions publishOptions = new PublishOptions();
+                                publishOptions.putHeader("android-ticker-text", "You just got a Device Request!");
+                                publishOptions.putHeader("android-content-title", "From " + currentUser);
+                                publishOptions.putHeader("android-content-text", "Reg:" + deviceNameString + "::" + deviceImeiString);
 
-                            PublishOptions publishOptions = new PublishOptions();
-                            publishOptions.putHeader( "android-ticker-text", "You just got a Device Request!" );
-                            publishOptions.putHeader( "android-content-title", "From "+ currentUser );
-                            publishOptions.putHeader( "android-content-text", "Reg:" +deviceNameString+"::"+deviceImeiString);
+                                Backendless.Messaging.publish("this is a private message!", publishOptions, deliveryOptions, new AsyncCallback<MessageStatus>() {
+                                    @Override
+                                    public void handleResponse(MessageStatus response) {
+                                        Toast.makeText(getActivity(), " Message sent to " + deviceId, Toast.LENGTH_SHORT).show();
+                                        getActivity().finish();
 
-                            Backendless.Messaging.publish("this is a private message!", publishOptions, deliveryOptions, new AsyncCallback<MessageStatus>() {
-                                @Override
-                                public void handleResponse(MessageStatus response) {
-                                    Toast.makeText(getActivity()," Message sent to "+deviceId,Toast.LENGTH_SHORT).show();
-                                    Intent intent=new Intent(getActivity(),SearchDeviceActivity.class);
-                                    startActivity(intent);
+                                    }
 
-                                }
-
-                                @Override
-                                public void handleFault(BackendlessFault fault) {
-                                    Toast.makeText(getActivity(),"Message sending failed",Toast.LENGTH_SHORT).show();
-                                }
-                            });
+                                    @Override
+                                    public void handleFault(BackendlessFault fault) {
+                                        Toast.makeText(getActivity(), "Message sending failed", Toast.LENGTH_SHORT).show();
+                                        getActivity().finish();
+                                    }
+                                });
+                            }
+                        }
+                        if(isLoading==false) {
+                            getActivity().finish();
                         }
                     }
 

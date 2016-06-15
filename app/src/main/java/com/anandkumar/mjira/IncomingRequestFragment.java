@@ -41,6 +41,7 @@ public class IncomingRequestFragment extends Fragment {
     private RecyclerView recyclerView;
     private LinearLayout linlaHeaderProgress;
     private LinearLayout cv_linlaHeaderProgress;
+    boolean isLoading=false;
     private String currentUser;
     DeviceRequest clickedDevice;
     private int clickedPosition;
@@ -177,32 +178,37 @@ public class IncomingRequestFragment extends Fragment {
 
 
 
-                                                Toast.makeText(getActivity(),"Push message sent to "+deviceId,Toast.LENGTH_SHORT).show();
+                                                if(deviceId!=null) {
 
-                                                DeliveryOptions deliveryOptions = new DeliveryOptions();
-                                                deliveryOptions.addPushSinglecast( deviceId );
+                                                    isLoading=true;
+                                                    DeliveryOptions deliveryOptions = new DeliveryOptions();
+                                                    deliveryOptions.addPushSinglecast(deviceId);
 
-                                                PublishOptions publishOptions = new PublishOptions();
-                                                publishOptions.putHeader( "android-ticker-text", "Your Device Request is Accepted!" );
-                                                publishOptions.putHeader( "android-content-title","Your Device Request is accepted by "+ uname);
-                                                publishOptions.putHeader( "android-content-text", "Reg:" + dName+"::"+dImei);
+                                                    PublishOptions publishOptions = new PublishOptions();
+                                                    publishOptions.putHeader("android-ticker-text", "Your Device Request is Accepted!");
+                                                    publishOptions.putHeader("android-content-title", "Your Device Request is accepted by " + uname);
+                                                    publishOptions.putHeader("android-content-text", "Reg:" + dName + "::" + dImei);
 
-                                                Backendless.Messaging.publish("this is a private message!", publishOptions, deliveryOptions, new AsyncCallback<MessageStatus>() {
-                                                    @Override
-                                                    public void handleResponse(MessageStatus response) {
-                                                        Toast.makeText(getActivity(),"Push message sent to "+deviceId,Toast.LENGTH_SHORT).show();
+                                                    Backendless.Messaging.publish("this is a private message!", publishOptions, deliveryOptions, new AsyncCallback<MessageStatus>() {
+                                                        @Override
+                                                        public void handleResponse(MessageStatus response) {
 
-                                                        cv_linlaHeaderProgress.setVisibility(View.GONE);
-                                                        adapter.delete(clickedPosition);
-                                                        //getIncomingFriendRequests(currentUser);
-                                                    }
 
-                                                    @Override
-                                                    public void handleFault(BackendlessFault fault) {
-                                                        cv_linlaHeaderProgress.setVisibility(View.GONE);
-                                                        Toast.makeText(getActivity(),"Push message sending failed",Toast.LENGTH_SHORT).show();
-                                                    }
-                                                });
+                                                            cv_linlaHeaderProgress.setVisibility(View.GONE);
+                                                            adapter.delete(clickedPosition);
+                                                            //getIncomingFriendRequests(currentUser);
+                                                        }
+
+                                                        @Override
+                                                        public void handleFault(BackendlessFault fault) {
+                                                            cv_linlaHeaderProgress.setVisibility(View.GONE);
+                                                            Toast.makeText(getActivity(), "Push message sending failed", Toast.LENGTH_SHORT).show();
+                                                        }
+                                                    });
+                                                }
+                                            }
+                                            if(isLoading==false) {
+                                                adapter.delete(clickedPosition);
                                             }
                                         }
 
