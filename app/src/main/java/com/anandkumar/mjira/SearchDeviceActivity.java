@@ -18,6 +18,7 @@ public class SearchDeviceActivity extends ActionBarActivity {
         setContentView(R.layout.activity_search_device);
 
         initToolBar();
+
         SearchDeviceFragment searchDeviceFragment=new SearchDeviceFragment();
         getSupportFragmentManager().beginTransaction().add(R.id.searchDeviceContainer,searchDeviceFragment).commit();
     }

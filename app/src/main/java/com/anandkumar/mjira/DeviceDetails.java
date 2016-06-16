@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.View;
 
 public class DeviceDetails extends ActionBarActivity {
 
@@ -18,6 +19,13 @@ public class DeviceDetails extends ActionBarActivity {
         setContentView(R.layout.activity_device_details);
 
         initToolBar();
+
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
         DeviceDetailsFragment deviceDetailsFragment=new DeviceDetailsFragment();
         getSupportFragmentManager().beginTransaction().add(R.id.deviceDetailsContainer,deviceDetailsFragment).commit();
     }
