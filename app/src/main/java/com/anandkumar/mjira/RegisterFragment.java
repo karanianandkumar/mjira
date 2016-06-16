@@ -19,6 +19,7 @@ import android.widget.Toast;
 
 import com.backendless.Backendless;
 import com.backendless.BackendlessUser;
+import com.backendless.DeviceRegistration;
 import com.backendless.async.callback.AsyncCallback;
 import com.backendless.exceptions.BackendlessFault;
 
@@ -42,6 +43,7 @@ public class RegisterFragment extends Fragment {
     private EditText inputName, inputEmail, inputPassword;
     private TextInputLayout inputLayoutName, inputLayoutEmail, inputLayoutPassword;
     private Button btnSignUp;
+    public static final String GCMSENDER_ID="1003552598634";
 
     public RegisterFragment() {
         // Required empty public constructor
@@ -66,6 +68,30 @@ public class RegisterFragment extends Fragment {
         inputEmail.addTextChangedListener(new MyTextWatcher(inputEmail));
         inputPassword.addTextChangedListener(new MyTextWatcher(inputPassword));
 
+        final Preferences saveData = new Preferences();
+
+        final String deviceId = saveData.readString(getActivity(), saveData.DEVICE_ID, null);
+
+
+
+        if (deviceId == null) {
+            Backendless.Messaging.registerDevice(GCMSENDER_ID);
+        }
+            Backendless.Messaging.getDeviceRegistration(new AsyncCallback<DeviceRegistration>() {
+                @Override
+                public void handleResponse(DeviceRegistration response) {
+
+                    saveData.writeString(getActivity(), saveData.DEVICE_ID, response.getDeviceId());
+
+
+                }
+
+                @Override
+                public void handleFault(BackendlessFault fault) {
+
+                }
+            });
+
         btnSignUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -75,12 +101,11 @@ public class RegisterFragment extends Fragment {
 
 
         progress = new ProgressDialog(getActivity());
-        progress.setTitle("Loading");
         progress.setMessage("Wait while registrering...");
         progress.setCancelable(false);
 
 
-        String deviceId_pref=saveData.readString(getActivity().getApplicationContext(),saveData.DEVICE_ID,null);
+
 
 
 

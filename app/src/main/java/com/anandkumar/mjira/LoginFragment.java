@@ -66,7 +66,6 @@ public class LoginFragment extends Fragment {
         inputPassword.addTextChangedListener(new MyTextWatcher(inputPassword));
 
          progress = new ProgressDialog(getActivity());
-        progress.setTitle("Loading");
         progress.setMessage("Wait while logging in...");
         progress.setCancelable(false);
 
