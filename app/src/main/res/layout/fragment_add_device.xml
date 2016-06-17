@@ -8,27 +8,47 @@
 
     <!-- TODO: Update blank fragment layout -->
 
-
-    <EditText
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/input_device_name"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/deviceName"
-        android:hint="@string/device_name"
-        android:layout_gravity="center_horizontal" />
+        android:layout_height="wrap_content">
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/deviceName"
+            android:hint="@string/device_name"
+            android:singleLine="true"
+            android:layout_gravity="center_horizontal" />
 
-    <EditText
-        android:paddingTop="20dp"
+    </android.support.design.widget.TextInputLayout>
+
+
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/input_imei"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="@string/imei"
-        android:phoneNumber="true"
-        android:numeric="integer"
-        android:id="@+id/deviceIMEI"
-        android:layout_gravity="center_horizontal" />
+        android:layout_height="wrap_content">
+
+        <EditText
+
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/imei"
+            android:inputType="phone"
+            android:id="@+id/deviceIMEI"
+            android:layout_gravity="center_horizontal" />
+    </android.support.design.widget.TextInputLayout>
+
+
+
+
+
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
         android:text=" Add "
         android:id="@+id/addDevice"
+        android:theme="@style/MyRaisedButton"
         android:layout_gravity="right"/>
 </LinearLayout>

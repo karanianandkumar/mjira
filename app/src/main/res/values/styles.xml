@@ -39,4 +39,13 @@
         <item name="cardBackgroundColor">@android:color/white</item>
     </style>
 
+    <style name="MyFlatButton" parent="Theme.AppCompat.Light">
+        <item name="colorControlHighlight">#8cf58c</item>
+    </style>
+    <style name="MyRaisedButton" parent="Theme.AppCompat.Light">
+        <item name="colorControlHighlight">#8cf58c</item>
+        <item name="colorButtonNormal">@color/colorPrimary</item>
+        <item name="android:textColor">#FFFFFF</item>
+    </style>
+
 </resources>

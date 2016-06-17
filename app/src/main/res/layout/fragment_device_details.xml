@@ -87,16 +87,16 @@
             android:id="@+id/dOwner" />
     </LinearLayout>
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/requestButton"
-        android:text="Request"
-        android:padding="10dp"
-        android:paddingRight="20dp"
-        android:textSize="20sp"
-        android:textColor="#24d1ce"
-        android:layout_gravity="right"/>
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/requestButton"
+                android:text="Request"
+                android:textColor="#24d1ce"
+                android:layout_gravity="right"
+                android:theme="@style/MyFlatButton"
+                style="@style/Widget.AppCompat.Button.Borderless"/>
+
 
 </LinearLayout>
 
